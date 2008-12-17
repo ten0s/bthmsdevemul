@@ -1,0 +1,21 @@
+Windows Mobile 5.0 SDK for Pocket PC
+http://www.microsoft.com/downloads/details.aspx?familyid=83a52af2-f524-4ec5-9155-717cbe5d25ed&displaylang=en
+
+Windows Mobile 5.0 SDK for Smartphone
+http://www.microsoft.com/downloads/details.aspx?familyid=DC6C00CB-738A-4B97-8910-5CD29AB5F8D9&displaylang=en
+
+Windows Mobile 6 Professional and Standard Software Development Kits Refresh
+http://www.microsoft.com/downloads/details.aspx?familyid=06111A3A-A651-4745-88EF-3D48091A390B&displaylang=en
+
+Standard SDK for Windows CE 5.0
+http://www.microsoft.com/downloads/details.aspx?familyid=FA1A3D66-3F61-4DDC-9510-AE450E2318C3&displaylang=en
+
+Standard SDK for Windows CE .NET 4.2
+http://www.microsoft.com/downloads/details.aspx?familyid=A08F6991-16B0-4019-A174-0C40E6D25FE7&displaylang=en
+
+Microsoft Remote Tools Framework 1.00
+http://www.microsoft.com/downloads/details.aspx?FamilyID=35e9ef0f-833f-4987-9d1f-157a0a6a76e4&DisplayLang=en
+
+Microsoft Device Emulator 3.0 -- Standalone Release
+http://www.microsoft.com/downloads/details.aspx?familyid=A6F6ADAF-12E3-4B2F-A394-356E2C2FB114&displaylang=en
+

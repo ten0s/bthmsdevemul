@@ -1,0 +1,49 @@
+HKLM
+{
+	NoRemove Drivers
+	{
+		ForceRemove BTE	= s ''
+		{
+			val Name = s 'BTE1:'
+			val IClass = s '{54DA86F7-9B78-46d1-8022-51BFA88D7F03}'
+			val AdvertiseInterface = d '1'
+		}
+	}
+	NoRemove Software	
+	{
+		NoRemove Microsoft
+		{
+			NoRemove Bluetooth
+			{
+				NoRemove Transports
+				{
+					NoRemove PnP
+					{
+						NoRemove {54DA86F7-9B78-46d1-8022-51BFA88D7F03} = s ''
+						{
+							val Driver = s 'bthemul.dll'
+							val Baud = d '9600'
+														
+							val InterfaceVersion = d '65537'
+							val MaxSizeRead = d '4096'
+							val MaxSizeWrite = d '4096'
+							val ReadBufferHeader = d '4'
+							val ReadBufferTrailer = d '0'
+							val WriteBufferHeader = d '4'
+							val WriteBufferTrailer = d '0'
+							val Flags = d '0'
+							val HardwareVersion = d '1'
+							val ResetDelay = d '1000'
+							val WriteTimeout = d '15000'
+							val DriftFactor = d '10800000'
+							val ScoWriteLowNumPackets = d '2'
+							val ScoWriteNumPackets = d '4'
+							val ScoWritePacketSize = d '51'
+							val ScoSampleSize = d '8'
+						}
+					}
+				}				
+			}
+		}				
+	}
+}

@@ -1,0 +1,14 @@
+Bluetooth Stack Architecture
+http://msdn.microsoft.com/en-us/library/ms890956.aspx
+
+Bluetooth Protocol Stack
+http://msdn.microsoft.com/en-us/library/ms890946.aspx
+
+Bluetooth HCI Transport Layer
+http://msdn.microsoft.com/en-us/library/ms890937.aspx
+
+Bluetooth HCI Transport Driver Registry Settings
+http://msdn.microsoft.com/en-us/library/ms890928.aspx
+
+Supported HCI Transport Drivers
+http://msdn.microsoft.com/en-us/library/ms894035.aspx

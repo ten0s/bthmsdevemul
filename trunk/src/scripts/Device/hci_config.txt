@@ -1,0 +1,16 @@
+InterfaceVersion		// interface version
+MaxSizeRead			// Max size of read packet (not including headers and trailers)
+MaxSizeWrite			// Max size of write packet (not including headers and trailers)
+ReadBufferHeader		// Hint : read may contain up to as much transport header bytes
+ReadBufferTrailer		// Hint : read may contain up to as much transport trailer bytes
+WriteBufferHeader		// Number of bytes to preallocate for transport header
+WriteBufferTrailer		// Number of bytes to preallocate for transport trailer
+Flags				// Flags
+HardwareVersion			// Bluetooth spec version of hardware
+ResetDelay			// milliseconds : delay next command after reset by this much
+WriteTimeout			// milliseconds : abort if card does not respond in this time (use the default above)
+DriftFactor			// milliseconds : inquiry data is good for this long
+ScoWriteLowNumPackets		// Minimum number of outstanding SCO write packets in backlog (0 - use default)
+ScoWriteNumPackets		// Maximum number of outstanding SCO write packets in backlog (0 - use default)
+ScoWritePacketSize		// Size of each SCO packet (0 - use default, -1 - SCO not supported)
+ScoSampleSize			// Sample size of SCO packet (8 or 16 bits)

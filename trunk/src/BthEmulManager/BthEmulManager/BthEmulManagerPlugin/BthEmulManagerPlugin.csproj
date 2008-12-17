@@ -1,0 +1,107 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{8A4922A2-D8BC-45FC-84FB-BAEA64EEA5C6}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>BthEmul</RootNamespace>
+    <AssemblyName>BthEmulManager</AssemblyName>
+    <ApplicationIcon>
+    </ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.RemoteToolSdk, Version=6.0.0.0, Culture=neutral, PublicKeyToken=caa16ece909bacb0, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\Microsoft Remote Tools Framework\1.00\bin\Microsoft.RemoteToolSdk.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AboutForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AboutForm.Designer.cs">
+      <DependentUpon>AboutForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BthRuntime.cs" />
+    <Compile Include="ControlPanelData.cs" />
+    <Compile Include="ControlPanelView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GlobalData.cs" />
+    <Compile Include="Plugin-Async.cs" />
+    <Compile Include="Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Settings.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="BthEmulManager.cebundleinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="AboutForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>AboutForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ControlPanelView.resx">
+      <DependentUpon>ControlPanelView.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bluetooth_disabled.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bluetooth_regular.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bluetooth_hot.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bluetooth_regular_72x72.jpg" />
+    <None Include="Resources\bluetooth_disabled_72x72.jpg" />
+    <None Include="Resources\bluetooth_hot_72x72.jpg" />
+    <Content Include="settings.xml" />
+    <Content Include="set_settings.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>"C:\Program Files\Microsoft Remote Tools Framework\1.00\bin\RemoteToolBundler.exe" -f:"$(ProjectDir)BthEmulManager.cebundleinfo" -c:$(ConfigurationName) -d:"$(SolutionDir)Bundle\$(ConfigurationName)" -b
+    </PostBuildEvent>
+    <PreBuildEvent>cscript.exe $(ProjectDir)set_settings.js</PreBuildEvent>
+  </PropertyGroup>
+</Project>

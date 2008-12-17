@@ -1,0 +1,1 @@
+call build_x86.cmd chk wxp

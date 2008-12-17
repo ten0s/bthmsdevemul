@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+   This file is part of Bluetooth for Microsoft Device Emulator
+ 
+   Copyright (C) 2008 Dmitry Klionsky <dm.klionsky@gmail.com>
+   
+   This program is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program. If not, see <http://www.gnu.org/licenses/>.
+-->
+<RTFxPlugin SchemaVersion="1.0" RTFxBuild="6.0.1937.0" xmlns="http://schemas.microsoft.com/windowsce/rtfx/" GUID="7C4CAC36-703F-4B5F-BC11-8AA26246312C">
+	<Copyright>Copyright (C) 2008 Dmitry Klionsky &lt;dm.klionsky@gmail.com&gt;</Copyright>
+	<Version>v.0.9.3</Version>
+	<Company>Dmitry Klionsky</Company>
+	<URL>http://code.google.com/p/bthmsdevemul/</URL>
+	<Locales>
+		<Locale LCID="1033" Language="English"/>
+	</Locales>
+	<Titles>
+		<Title LCID="1033" _locID="description.any" Name="Bluetooth for Microsoft Device Emulator" Description="Bluetooth for Microsoft Device Emulator enables Bluetooth communication from and to the emulator"/>
+	</Titles>
+	<DesktopComponent UsesDefaultShell="True" PluginObjectName="BthEmul.PluginClass">
+		<Files>
+			<File PrimaryComponent="True" Description="PrimaryDesktop">
+				<Path ID="6" LCID="1033" Location="bin\%Configuration%\BthEmulManager.dll"/>
+			</File>
+			<File PrimaryComponent="False" Description="Free Bluetooth Runtime">
+				<Path ID="9" Location="..\..\..\freebt\src\runtime\%Configuration%\fbtrt.dll"/>
+			</File>
+		</Files>
+	</DesktopComponent>
+	<DeviceComponents>
+		<Configurations>
+			<Configuration RemotePath="\Temp" DeviceOSVerMax="6.99" DeviceOSVerMin="5.00" Managed="False" Name="ARMV4_Configuration" CPU="ARMV4i">
+				<IncludedPackages>
+					<IncludedPackage Name="ARMV4I_Package"/>
+				</IncludedPackages>
+			</Configuration>
+		</Configurations>
+		<Packages>
+			<Package Name="ARMV4I_Package">
+				<Files>
+					<File PrimaryComponent="True" Description="ARMV4I_Package">
+						<Path ID="7" LCID="1033" Location="..\BthEmulAgent\STANDARDSDK_500 (ARMV4I)\%Configuration%\BthEmulAgent.exe"/>
+					</File>
+					<File PrimaryComponent="False" Description="ARMV4I_Package">
+						<Path ID="8" LCID="1033" Location="..\..\..\bthemul\STANDARDSDK_500 (ARMV4I)\%Configuration%\bthemul.dll"/>
+					</File>
+					<File PrimaryComponent="False" Description="ARMV4I_Package">
+						<Path ID="5" LCID="1033" Location="..\..\..\bthemulcom\STANDARDSDK_500 (ARMV4I)\%Configuration%\bthemulcom.dll"/>
+					</File>
+					<File PrimaryComponent="False" Description="ARMV4I_Package">
+						<Path ID="1" LCID="1033" Location="..\..\..\scripts\device\bthemul.rgs"/>
+					</File>
+				</Files>
+			</Package>
+		</Packages>
+	</DeviceComponents>
+</RTFxPlugin>

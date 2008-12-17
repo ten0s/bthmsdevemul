@@ -1,0 +1,143 @@
+// bthhci.cpp : Defines the entry point for the console application.
+//
+
+#include <windows.h>
+#include <stdio.h>
+#include <tchar.h>
+
+#define __USE_DLL__
+
+#ifndef __USE_DLL__
+#include "BthEmulHci.h"
+
+CBthEmulHci g_bthHw;
+BOOL AttachHardware( CBthEmulHci& hw );
+BOOL DetachHardware( CBthEmulHci& hw );
+BOOL SendHCICommand( CBthEmulHci& hw, BYTE* /*in*/pCmdBuffer, DWORD /*in*/dwCmdLength );
+BOOL GetHCIEvent( CBthEmulHci& hw, BYTE* /*out*/pEventBuffer, DWORD& /*in/out*/dwEventLength );
+BOOL SubscribeHCIEvent( CBthEmulHci& hw, HCI_EVENT_LISTENER hciEventListener );
+
+BOOL Export_AttachHardware();
+BOOL Export_DetachHardware();
+BOOL Export_SendHCICommand( BYTE* /*in*/pCmdBuffer, DWORD /*in*/dwCmdLength );
+BOOL Export_GetHCIEvent( BYTE* /*out*/pEventBuffer, DWORD& /*in/out*/dwEventLength );
+BOOL Export_SubscribeHCIEvent( HCI_EVENT_LISTENER hciEventListener );
+
+#else
+#include "fbtrt.h"
+#endif
+
+#include "fbtlog.h"
+#include "fbtHciCmds.h"
+
+#define DEVICE_SYM_LINK	"\\\\.\\FbtUsb"
+
+
+#define MAX_BUFFER_SIZE	257
+void PrintBuffer( const CHAR* szMsg, BYTE* pBuffer, DWORD dwLength );
+
+
+extern "C" DWORD __stdcall OnEvent( BYTE* /*in*/pEventBuffer, DWORD /*in*/dwEventLength )
+{
+   PrintBuffer( "Event", pEventBuffer, dwEventLength );
+
+   return TRUE;
+}
+
+int _tmain(int argc, _TCHAR* argv[])
+{
+	unsigned char buffer[MAX_BUFFER_SIZE];
+
+   fbtLogSetFile("fbtrt.log");
+   fbtLogSetLevel(255);
+
+   SubscribeHCIEvent( /*g_bthHw, */OnEvent );
+   
+   if ( AttachHardware( /*g_bthHw*/ ) )
+	{
+      buffer[0] = FBT_HCI_SYNC_HCI_COMMAND_PACKET;
+      buffer[1] = 0x03;
+		buffer[2] = 0x0c;
+		buffer[3] = 0x00;
+		DWORD dwInLength = 4;
+		PrintBuffer( "Command", buffer, dwInLength );
+
+		DWORD dwOutLength = MAX_BUFFER_SIZE;
+		BOOL bRet = SendHCICommand( /*g_bthHw, */buffer, dwInLength );	
+		if ( !bRet )
+		{
+			printf( "Error: %lu\n", GetLastError() );
+		}
+                  
+      getchar();
+      DetachHardware( /*g_bthHw*/ );
+	}
+
+	return 0;
+}
+
+void PrintBuffer( const CHAR* szMsg, BYTE* pBuffer, DWORD dwLength )
+{
+	printf( "%s: ", szMsg );
+	for ( DWORD i = 0; i < dwLength; ++i )
+	{
+		printf( "%02x ", pBuffer[i] );
+	}
+	printf( "\r\n" );
+}
+
+#ifndef __USE_DLL__
+
+BOOL AttachHardware( CBthEmulHci& hw )
+{
+   if ( hw.IsAttached() ) {
+      SetLastError( ERROR_DEVICE_IN_USE );
+      return FALSE;
+   }
+
+   char szDeviceName[MAX_PATH];
+   for( int i = 0; i < 255 && !hw.IsAttached(); ++i ) {
+      sprintf_s( szDeviceName, sizeof( szDeviceName ), "%s%02d", DEVICE_SYM_LINK, i );
+      hw.Attach( szDeviceName );
+   }
+
+   if ( !hw.IsAttached() )
+   {
+      SetLastError( ERROR_DEVICE_NOT_AVAILABLE );
+      return FALSE;
+   }
+
+   if ( ERROR_SUCCESS != hw.StartEventListener() )
+   {
+      hw.Detach();
+      return FALSE;
+   }
+
+   return TRUE;
+}
+
+BOOL DetachHardware( CBthEmulHci& hw )
+{
+   if ( !hw.IsAttached() )
+   {
+      SetLastError( ERROR_DEVICE_NOT_AVAILABLE );
+      return FALSE;
+   }
+
+   hw.StopEventListener();
+   hw.Detach();
+   return TRUE;
+}
+
+BOOL SendHCICommand( CBthEmulHci& hw, BYTE* /*in*/pCmdBuffer, DWORD /*in*/dwCmdLength )
+{
+   DWORD dwResult = hw.SendHCICommand( pCmdBuffer, dwCmdLength );
+   return ( dwResult == ERROR_SUCCESS );
+}
+
+BOOL SubscribeHCIEvent( CBthEmulHci& hw, HCI_EVENT_LISTENER hciEventListener )
+{
+   return hw.SubscribeHCIEvent( hciEventListener );
+}
+
+#endif

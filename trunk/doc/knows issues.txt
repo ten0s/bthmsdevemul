@@ -1,0 +1,23 @@
+1. Remote Tools Framework reconnect throws an exception:
+Managed Debugging Assistant 'DisconnectedContext' has detected a problem in 'C:\Program Files\Microsoft Remote Tools Framework\1.00\Bin\RemoteToolsShell.exe'.
+Additional Information: Context 0x1f52a8' is disconnected.  Releasing the interfaces from the current context (context 0x1f5138).This may cause corruption or data loss. To avoid this problem, please ensure that all contexts/apartments stay alive until the applicationis completely done with the RuntimeCallableWrappers that represent COM components that liveinside them.
+http://msdn.microsoft.com/en-us/library/d21c150d.aspx
+
+Solution:
+Remote Tools Framework knows issue:
+Disconnecting and reconnecting a Remote Tools Framework plug-in quickly may cause your device to hang
+After disconnecting a Remote Tools Framework plug-in from a device, you may have a problem reconnecting the same plug-in if you try to reconnect too quickly. This is more likely to happen on physical devices and appears to be an internal issue with Core Connectivity. The workaround is to wait a few seconds after disconnecting a Remote Tools Framework plug-in before reconnecting it.
+
+
+2. Datastore corrupted issue.
+Solution:
+Launch BthMsDevEmul\scripts\repair_datastore.cmd script.
+
+Other info:
+Error retrieving information from user datastore (Devices)
+http://msdn.microsoft.com/en-us/library/ms184403.aspx
+
+
+
+
+
