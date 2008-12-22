@@ -68,7 +68,7 @@ BLUETOOTH USB DRIVER INSTALLATION
 8 In the Locate File dialog, browse to fbtusb.inf file and click "Next >".
 9 When a "Hardware Installation warning" appears, click "Continue Anyway".
 10 Once the installation has been completed, click "Finish".
-11. The Device Manager should now display "FreeBT USB Driver" in the list of USB controllers.
+11 The Device Manager should now display "FreeBT USB Driver" in the list of USB controllers.
 
 Please refer to FreeBT documentation for more details.
 
@@ -77,7 +77,7 @@ GETTING STARTED
 ===============
 
 1 Install FreeBT USB Driver as described above.
-2 Select "Start", select "Programs", select "Bluetooth for Microsoft Device Emulator", select "RTFx Plugin".
+2 Launch BthEmulManager.cetool from "RTFx Plugin" folder.
 3 Select a device from the devices list.
 4 Wait for device to be connected.
 5 Select "Bluetooth for Microsoft Device Emulator" node.
@@ -101,7 +101,8 @@ GETTING STARTED
 
 THANKS
 ======
-Thanks to Antony C. Roberts for its FreeBT open source stack. Without it this release would not have been possible.
+
+Thanks to Antony C. Roberts for its FreeBT http://freebt.net/ open source stack. Without it this release would not have been possible.
 
 
 LEGAL
