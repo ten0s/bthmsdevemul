@@ -1,13 +1,83 @@
-#summary One-sentence summary of this page.
+#summary Readme notes for the project.
 
 = Introduction =
 
-Add your content here.
+Bluetooth for Microsoft Device Emulator enables Bluetooth communication from and to the emulator.
+
+Bluetooth connectivity with the Microsoft Device Emulator has been tested with the following SDKs:
+  * Windows Mobile 5.0 Pocket PC SDK
+  * Windows Mobile 5.0 Smartphone SDK
+  * Windows Mobile 6 Professional SDK
+  * Windows Mobile 6 Standard SDK
+
+= REQUIREMENTS =
+
+  * Windows XP Service Pack 2 or greater
+  * Microsoft Visual Studio 2005 including the Smart Device Programmability feature (Recommended: Service Pack 1)
+  * Windows Mobile 5.0 SDK for Pocket PC and/or Windows Mobile 5.0 SDK for Smartphone and/or Windows Mobile 6 Professional SDK and/or Windows Mobile 6 Standard SDK
+  * Microsoft Device Emulator (Recommended: Version 3.0)
+  * Microsoft Remote Tools Framework 1.00
+  * Bluetooth USB dongle
 
 
-= Details =
+= NOTE =
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+This version of Bluetooth for Microsoft Device Emulator uses FreeBT project [http://freebt.net/ http://freebt.net/] to
+access the Bluetooth USB dongle.
+
+
+= HARDWARE =
+
+The FreeBT USB Driver is written in accordance with the  Bluetooth USB HCI spec. Any device that follows
+the recommendations set down in that spec should be compatible with the FreeBT driver.
+
+The fbtusb.inf will, by default, install any USB dongle that identifies itself with Class 0xE0 (Wireless Controller),
+SubClass 0x01 (RF Controller) and Protocol 0x01 (Bluetooth programming), in accordance with the USB HCI spec.
+
+Specifically, FreeBT USB has been tested with the following devices:
+
+  * Acer BT-700 (Class 1 device)
+  * D-Link DBT-120 (Class 2 device)
+  * Any CSR or Silicon Wave-based USB devices
+
+Actually, both of these devices incorporate a CSR BlueCore01 chip, (as do most of the commercially available
+Bluetooth dongles at present), which (apart from their amplifiers) makes them identical.
+
+
+= BLUETOOTH USB DRIVER INSTALLATION =
+
+  # Open the Windows Device Manager.
+  # In the Device Manager, locate the Bluetooth device to be used as the FreeBT USB device.
+  # Click the right mouse button and select "Update Driver..." in the popup-menu.
+  # Select "No, not this time" and click "Next >".
+  # Select "Install from a list or specific location" and click "Next >".
+  # Select "Don’t search. I will choose the driver to install" and click "Next >".
+  # Select the device driver and click the "Have Disk...".
+  # In the Locate File dialog, browse to fbtusb.inf file and click "Next >".
+  # When a "Hardware Installation warning" appears, click "Continue Anyway".
+  # Once the installation has been completed, click "Finish".
+  # The Device Manager should now display "FreeBT USB Driver" in the list of USB controllers.
+
+Please refer to FreeBT documentation for more details.
+
+
+= GETTING STARTED =
+
+  # Install FreeBT USB Driver as described above.
+  # Launch BthEmulManager.cetool from "RTFx Plugin" folder.
+  # Select a device from the devices list.
+  # Wait for device to be connected.
+  # Select "Bluetooth for Microsoft Device Emulator" node.
+  # If you have a Bluetooth device attached succesfully then the Bluetooth device info (Address, Manufacturer, HCI Version, LMP Version) will be displayed. Bluetooth should now be operational in your emulator. An error code with the description will be displayed otherwise.
+  # To clear the communication log click the right mouse button and select "Clear All".
+  # To copy current device information to the clipboard select "Bluetooth for Microsoft Device Emulator" node, click the right mouse button and select "Copy to Clipboard".
+  # To switch off bluetooth on the emulator click "Connection" menu item and select "Disconnect from ... emulator".
+  # Microsoft Remote Tools Framework allows you to start two device emulators at the same time. If you have installed two or more FreeBT USB devices click "Windows" menu item and select "Split Windows View". Repeat steps 3-6. You will get two bluetooth powered emulators are running simultaneously.
+  # It is possible to enable/disable device side logging. If you enable "Device Logging" checkbox then remote logging will be enabled on the emulator. Have a look at \\Temp directory on the emulator. There should be created btd_bthemul_0.txt, btd_BthEmulAgent_0.txt, btd_bthemulcom_0.txt files.
+  # It is possible to enable/disable desktop side logging. If you enable "Desktop Logging" checkbox then local logging will be enabled. Have a look at your installation directory. There should be created BthEmulManager.txt file.
+  # It is possible to enable/disable communication logging. Communication logging allows to see communication activities between the emulator and the bluetooth device.
+
+
+= THANKS =
+
+Thanks to Antony C. Roberts for its FreeBT open source stack. Without it this release would not have been possible.
