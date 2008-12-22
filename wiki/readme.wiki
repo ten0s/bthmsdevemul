@@ -64,7 +64,7 @@ Please refer to FreeBT documentation for more details.
 = GETTING STARTED =
 
   # Install FreeBT USB Driver as described above.
-  # Launch BthEmulManager.cetool from "RTFx Plugin" folder.
+  # Launch {{{BthEmulManager.cetool}}} from "RTFx Plugin" folder.
   # Select a device from the devices list.
   # Wait for device to be connected.
   # Select "Bluetooth for Microsoft Device Emulator" node.
@@ -73,8 +73,8 @@ Please refer to FreeBT documentation for more details.
   # To copy current device information to the clipboard select "Bluetooth for Microsoft Device Emulator" node, click the right mouse button and select "Copy to Clipboard".
   # To switch off bluetooth on the emulator click "Connection" menu item and select "Disconnect from ... emulator".
   # Microsoft Remote Tools Framework allows you to start two device emulators at the same time. If you have installed two or more FreeBT USB devices click "Windows" menu item and select "Split Windows View". Repeat steps 3-6. You will get two bluetooth powered emulators are running simultaneously.
-  # It is possible to enable/disable device side logging. If you enable "Device Logging" checkbox then remote logging will be enabled on the emulator. Have a look at \\Temp directory on the emulator. There should be created btd_bthemul_0.txt, btd_BthEmulAgent_0.txt, btd_bthemulcom_0.txt files.
-  # It is possible to enable/disable desktop side logging. If you enable "Desktop Logging" checkbox then local logging will be enabled. Have a look at your installation directory. There should be created BthEmulManager.txt file.
+  # It is possible to enable/disable device side logging. If you enable "Device Logging" checkbox then remote logging will be enabled on the emulator. Have a look at {{{\\Temp}}} directory on the emulator. There should be created {{{btd_bthemul_0.txt}}}, {{{btd_BthEmulAgent_0.txt}}}, {{{btd_bthemulcom_0.txt}}} files.
+  # It is possible to enable/disable desktop side logging. If you enable "Desktop Logging" checkbox then local logging will be enabled. Have a look at your installation directory. There should be created {{{BthEmulManager.txt}}} file.
   # It is possible to enable/disable communication logging. Communication logging allows to see communication activities between the emulator and the bluetooth device.
 
 
