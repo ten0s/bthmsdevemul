@@ -22,7 +22,7 @@ Bluetooth connectivity with the Microsoft Device Emulator has been tested with t
 
 = NOTE =
 
-This version of Bluetooth for Microsoft Device Emulator uses FreeBT project [http://freebt.net/ http://freebt.net/] to
+This version of Bluetooth for Microsoft Device Emulator uses [http://freebt.net/ FreeBT] project  to
 access the Bluetooth USB dongle.
 
 
@@ -80,4 +80,4 @@ Please refer to FreeBT documentation for more details.
 
 = THANKS =
 
-Thanks to Antony C. Roberts for its FreeBT [http://freebt.net/ http://freebt.net/] open source stack. Without it this release would not have been possible.
+Thanks to Antony C. Roberts for its [http://freebt.net/ FreeBT] open source stack. Without it this release would not have been possible.
