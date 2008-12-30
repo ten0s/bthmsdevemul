@@ -29,8 +29,8 @@ static HANDLE g_hWriteEvent = NULL;
 static HANDLE g_hReadEvent = NULL;
 static HCI_TransportCallback g_pfCallback = NULL;
 
-#define PACKET_SIZE_R       (8198)
-#define PACKET_SIZE_W       (8198)
+#define PACKET_SIZE_R       (4096)
+#define PACKET_SIZE_W       (4096)
 
 #define DEFAULT_BTE_NAME    L"BTE1:"
 
@@ -56,8 +56,7 @@ When the system calls the DllMain function with a value other than DLL_PROCESS_A
 */
 BOOL APIENTRY DllMain( HANDLE hModule, DWORD ul_reason_for_call, LPVOID lpReserved )
 {
-	switch ( ul_reason_for_call )
-	{
+	switch ( ul_reason_for_call ) {
 	case DLL_PROCESS_ATTACH:
 		DebugInit();
 		IFDBG( DebugOut( DEBUG_OUTPUT, L"DllMain: DLL_PROCESS_ATTACH\n" ) );
@@ -101,8 +100,7 @@ int HCI_ReadHciParameters( HCI_PARAMETERS* pParms )
    
    int nRet = TRUE;
 
-   if( pParms->uiSize < sizeof( *pParms ) ) 
-   {
+   if( pParms->uiSize < sizeof( *pParms ) ) {
 	   nRet = FALSE;
 	   IFDBG( DebugOut( DEBUG_OUTPUT, L"-HCI_ReadHciParameters ret: %d\n", nRet ) );
       return nRet;
@@ -241,14 +239,12 @@ int HCI_StartHardware()
 {
     IFDBG( DebugOut( DEBUG_OUTPUT, L"+HCI_StartHardware\n" ) );
     
-    if ( g_hFile != INVALID_HANDLE_VALUE ) 
-    {
+    if ( g_hFile != INVALID_HANDLE_VALUE ) {
         IFDBG( DebugOut( DEBUG_OUTPUT, L"-HCI_StartHardware (already started)\n" ) );
         return TRUE;
     }
 
-    if ( !g_pfCallback ) 
-    {
+    if ( !g_pfCallback ) {
         IFDBG( DebugOut( DEBUG_OUTPUT, L"-HCI_StartHardware (not registered)\n" ) );
         return FALSE;
     }
@@ -266,14 +262,12 @@ int HCI_StopHardware()
 {
     IFDBG( DebugOut( DEBUG_OUTPUT, L"+HCI_StopHardware\n" ) );
     
-    if ( g_hFile == INVALID_HANDLE_VALUE ) 
-    {
+    if ( g_hFile == INVALID_HANDLE_VALUE ) {
         IFDBG( DebugOut( DEBUG_OUTPUT, L"-HCI_StopHardware (already stopped)\n" ) );
         return TRUE;
     }
 
-    if ( !g_pfCallback )
-    {
+    if ( !g_pfCallback ) {
         IFDBG( DebugOut( DEBUG_OUTPUT, L"-HCI_StopHardware (not registered)\n" ) );
         return FALSE;
     }
@@ -296,8 +290,7 @@ int HCI_OpenConnection()
 
    int nRet = TRUE;
 
-   if ( g_hFile != INVALID_HANDLE_VALUE )
-   {
+   if ( g_hFile != INVALID_HANDLE_VALUE ) {
 		nRet = FALSE;
 		IFDBG( DebugOut( DEBUG_OUTPUT, L"-HCI_OpenConnection ret: %d\n", nRet ) );
 		return nRet;
@@ -309,8 +302,7 @@ int HCI_OpenConnection()
    DWORD dwBaud = 115200;
 
    HKEY hk;
-   if( ERROR_SUCCESS == RegOpenKeyEx ( HKEY_LOCAL_MACHINE, L"software\\microsoft\\bluetooth\\hci", 0, KEY_READ, &hk ) ) 
-   {
+   if( ERROR_SUCCESS == RegOpenKeyEx ( HKEY_LOCAL_MACHINE, L"software\\microsoft\\bluetooth\\hci", 0, KEY_READ, &hk ) ) {
       DWORD dwType;
       DWORD dwSize = sizeof(szPortName);
       if( ( ERROR_SUCCESS == RegQueryValueEx( hk, L"Name", NULL, &dwType, (LPBYTE)szPortName, &dwSize ) ) &&
@@ -428,8 +420,7 @@ void HCI_CloseConnection()
 {
     IFDBG( DebugOut( DEBUG_OUTPUT, L"+HCI_CloseConnection\n" ) );
 
-    if ( g_hFile == INVALID_HANDLE_VALUE ) 
-    {
+    if ( g_hFile == INVALID_HANDLE_VALUE ) {
         IFDBG( DebugOut( DEBUG_OUTPUT, L"-HCI_CloseConnection - not active\n" ) );
         return;
     }
@@ -440,8 +431,7 @@ void HCI_CloseConnection()
 
     g_hFile = INVALID_HANDLE_VALUE;
     g_hWriteEvent = NULL;
-    g_hReadEvent = NULL;
-    g_hWriteEvent = g_hReadEvent = NULL;
+    g_hReadEvent = NULL;    
 
     IFDBG( DebugOut( DEBUG_OUTPUT, L"-HCI_CloseConnection\n" ) );
 
@@ -505,22 +495,19 @@ int HCI_WritePacket( HCI_TYPE eType, BD_BUFFER* pBuff )
 
    ASSERT( !( pBuff->cStart & 0x3 ) );
 
-   if ( ( (int)BufferTotal(pBuff) > PACKET_SIZE_W ) || ( pBuff->cStart < 1 ) ) 
-   {
+   if ( ( (int)BufferTotal(pBuff) > PACKET_SIZE_W ) || ( pBuff->cStart < 1 ) ) {
       IFDBG( DebugOut( DEBUG_OUTPUT, L"[EMUL] Packet too big (%d, should be <= %d), or no space for header!\n", BufferTotal( pBuff ), PACKET_SIZE_W ) );
       return FALSE;
    }
 
-   if ( g_hFile == INVALID_HANDLE_VALUE ) 
-   {
+   if ( g_hFile == INVALID_HANDLE_VALUE ) {
       DebugOut( DEBUG_OUTPUT, L"HCI_WritePacket - not active\n" );
       return FALSE;
    }    
 
    pBuff->pBuffer[--pBuff->cStart] = (unsigned char)eType;
 
-   if ( !WriteCommPort(pBuff->pBuffer + pBuff->cStart, BufferTotal( pBuff ) ) )
-   {
+   if ( !WriteCommPort(pBuff->pBuffer + pBuff->cStart, BufferTotal( pBuff ) ) ) {
       IFDBG( DebugOut( DEBUG_OUTPUT, L"-HCI_WritePacket - writing failed\n" ) );
       return FALSE;
    }
@@ -573,8 +560,7 @@ int HCI_ReadPacket( HCI_TYPE* peType, BD_BUFFER* pBuff )
 
          pBuff->cEnd = pBuff->cStart + 4 + (pBuff->pBuffer[pBuff->cStart + 2] | (pBuff->pBuffer[pBuff->cStart + 3] << 8 ) );
 
-         if( pBuff->cEnd > pBuff->cSize) 
-         {
+         if( pBuff->cEnd > pBuff->cSize) {
             IFDBG( DebugOut( DEBUG_OUTPUT, L"HCI_ReadPacket - failed: buffer too small\n" ) );
             return FALSE;
          }
@@ -596,8 +582,7 @@ int HCI_ReadPacket( HCI_TYPE* peType, BD_BUFFER* pBuff )
 
          pBuff->cEnd = pBuff->cStart + 3 + pBuff->pBuffer[pBuff->cStart + 2];
 
-         if( pBuff->cEnd > pBuff->cSize ) 
-         {
+         if( pBuff->cEnd > pBuff->cSize ) {
             IFDBG( DebugOut( DEBUG_OUTPUT, L"HCI_ReadPacket - failed: buffer too small\n" ) );
             return FALSE;
          }
@@ -621,8 +606,7 @@ int HCI_ReadPacket( HCI_TYPE* peType, BD_BUFFER* pBuff )
 
          pBuff->cEnd = pBuff->cStart + 2 + pBuff->pBuffer[pBuff->cStart + 1];
 
-         if ( pBuff->cEnd > pBuff->cSize ) 
-         {
+         if ( pBuff->cEnd > pBuff->cSize ) {
             IFDBG( DebugOut( DEBUG_OUTPUT, L"HCI_ReadPacket - failed: buffer too small\n" ) );
             return FALSE;
          }
