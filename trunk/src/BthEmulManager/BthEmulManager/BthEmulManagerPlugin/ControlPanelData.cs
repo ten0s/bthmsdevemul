@@ -1,7 +1,7 @@
 /**
  *   This file is part of Bluetooth for Microsoft Device Emulator
  * 
- *   Copyright (C) 2008 Dmitry Klionsky <dm.klionsky@gmail.com>
+ *   Copyright (C) 2008-2009 Dmitry Klionsky <dm.klionsky@gmail.com>
  *   
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
