@@ -19,3 +19,6 @@ http://www.microsoft.com/downloads/details.aspx?FamilyID=35e9ef0f-833f-4987-9d1f
 Microsoft Device Emulator 3.0 -- Standalone Release
 http://www.microsoft.com/downloads/details.aspx?familyid=A6F6ADAF-12E3-4B2F-A394-356E2C2FB114&displaylang=en
 
+Visual Studio 2005 Service Pack 1 Update for Windows Vista
+http://www.microsoft.com/downloads/details.aspx?familyid=90e2942d-3ad1-4873-a2ee-4acc0aace5b6&displaylang=en
+
