@@ -1,7 +1,7 @@
 =======================================
 Bluetooth for Microsoft Device Emulator
 version 0.9.3
-December 13th, 2008
+December 14th, 2009
 =======================================
 
 INTRODUCTION
@@ -18,8 +18,9 @@ Bluetooth connectivity with the Microsoft Device Emulator has been tested with t
 
 REQUIREMENTS
 ============
-• Windows XP Service Pack 2 or greater
-• Microsoft Visual Studio 2005 including the Smart Device Programmability feature (Recommended: Service Pack 1)
+• Windows XP Service Pack 2 or greater, Windows Vista 32-bit
+• Microsoft Visual Studio 2005 Service Pack 1 including the Smart Device Programmability feature,
+  Visual Studio 2005 Service Pack 1 Update for Windows Vista
 • Windows Mobile 5.0 SDK for Pocket PC and/or
   Windows Mobile 5.0 SDK for Smartphone and/or
   Windows Mobile 6 Professional SDK and/or
