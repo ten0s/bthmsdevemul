@@ -80,4 +80,4 @@ Please refer to FreeBT documentation for more details.
 
 = THANKS =
 
-Thanks to Antony C. Roberts for its [http://freebt.net/ FreeBT] open source stack. Without it this release would not have been possible.
+Thanks to Antony C. Roberts for his [http://freebt.net/ FreeBT] open source stack. Without it this release would not have been possible.
