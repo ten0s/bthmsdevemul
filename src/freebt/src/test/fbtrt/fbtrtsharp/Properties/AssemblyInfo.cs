@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle( "fbtrtsharp" )]
 [assembly: AssemblyDescription( "" )]
 [assembly: AssemblyConfiguration( "" )]
-[assembly: AssemblyCompany( Dmitry Klionsky)]
+[assembly: AssemblyCompany( "Dmitry Klionsky")]
 [assembly: AssemblyProduct( "fbtrtsharp" )]
 [assembly: AssemblyCopyright( "Copyright © Dmitry Klionsky 2008-2009" )]
 [assembly: AssemblyTrademark( "" )]
