@@ -22,3 +22,6 @@ http://www.microsoft.com/downloads/details.aspx?familyid=A6F6ADAF-12E3-4B2F-A394
 Visual Studio 2005 Service Pack 1 Update for Windows Vista
 http://www.microsoft.com/downloads/details.aspx?familyid=90e2942d-3ad1-4873-a2ee-4acc0aace5b6&displaylang=en
 
+Windows Mobile 6.1.4 Emulator Images
+http://www.microsoft.com/downloads/details.aspx?FamilyID=1a7a6b52-f89e-4354-84ce-5d19c204498a&displaylang=en
+
