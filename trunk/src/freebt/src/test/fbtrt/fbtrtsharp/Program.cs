@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace fbtrtsharp
 {
@@ -25,39 +26,65 @@ namespace fbtrtsharp
             ETYPE_FINISH = 5
         };
 
+        [StructLayout(LayoutKind.Sequential)]
+        public struct BT_ADDR
+        {
+            public byte btAddr0;
+            public byte btAddr1;
+            public byte btAddr2;
+            public byte btAddr3;
+            public byte btAddr4;
+            public byte btAddr5;
+        };
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct DEVICE_INFO
+        {
+            public BT_ADDR btAddr;
+            public byte hciVersion;
+            public ushort hciRevision;
+            public byte lmpVersion;
+            public ushort manufacturer;
+            public ushort lmpSubVersion;
+        };
+
         [DllImport("kernel32.dll")]
         public static extern int GetLastError();
 
         [DllImport("fbtrt.dll", SetLastError = true)]
-        public static extern int AttachHardware();
+        public static extern int OpenDevice();
 
         [DllImport("fbtrt.dll", SetLastError = true)]
-        public static extern int DetachHardware();
+        public static extern int CloseDevice(int devId);
 
         [DllImport("fbtrt.dll", SetLastError = true)]
-        public static extern int SendHCICommand([MarshalAs(UnmanagedType.LPArray)] byte[] cmdBuf, uint cmdLen);
+        public static extern int SendHCICommand(int devId, [MarshalAs(UnmanagedType.LPArray)] byte[] cmdBuf, uint cmdLen);
 
         [DllImport("fbtrt.dll", SetLastError = true)]
-        public static extern int GetHCIEvent([MarshalAs(UnmanagedType.LPArray)] byte[] eventBuf, ref uint eventLen);
+        public static extern int GetDeviceInfo(int devId, ref DEVICE_INFO devInfo);
+
+        [DllImport("fbtrt.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+        public static extern string GetManufacturerName(ushort manufacturer);
 
         public delegate int HciEventListenerDelegate(IntPtr pEventBuf, uint eventLen);
 
         [DllImport("fbtrt.dll", SetLastError = true)]
-        public static extern int SubscribeHCIEvent(HciEventListenerDelegate hciEventListener);
+        public static extern int SubscribeHCIEvent(int devId, HciEventListenerDelegate hciEventListener);
 
-        [DllImport("fbtrt.dll", SetLastError = true, CharSet = CharSet.Ansi)]
+        [DllImport("fbtrt.dll", SetLastError = true, CharSet = CharSet.Unicode)]
         public static extern int SetLogFileName(string fileName);
 
         [DllImport("fbtrt.dll", SetLastError = true)]
-        public static extern int SetLogLevel(uint level);
+        public static extern int SetLogLevel(int level);
 
         
         static void Main( string[] args )
         {
             SetLogFileName("fbtrt.log");
             SetLogLevel(255);
-            
-            if ( 0 == AttachHardware() )
+
+            int devId = OpenDevice();
+            if ( devId == -1 )
             {
                 W32_ERROR error = (W32_ERROR)GetLastError();
                 if ( W32_ERROR.ERROR_DEVICE_IN_USE == error )
@@ -72,14 +99,14 @@ namespace fbtrtsharp
             else
             {
                 hciEventListener = new HciEventListenerDelegate( OnHciEvent );
-                SubscribeHCIEvent( hciEventListener );
+                SubscribeHCIEvent( devId, hciEventListener );
 
-                Console.WriteLine("Enter HCI command (empty for exit):");
-                for (; ; )
-                {
-                    string cmd = Console.ReadLine();
-                    if (cmd.Length == 0) break;
-                }
+                //Console.WriteLine("Enter HCI command (empty for exit):");
+                //for (;;)
+                //{
+                  //  string cmd = Console.ReadLine();
+                  //  if (cmd.Length == 0) break;
+                //}
 
                 byte[] reset = new byte[] { 0x01, 0x03, 0x0c, 0x00 };
                 //byte[] connect = new byte[] { 0x05, 0x04, 0x0d, 0xf7, 0x00, 0xfd, 0x76, 0x02, 0x00, 0x18, 0xcc, 0x01, 0x00, 0x00, 0x00, 0x01 };
@@ -87,13 +114,23 @@ namespace fbtrtsharp
                 //byte[] acl = new byte[] { 0x01, 0x20, 0x0c, 0x00, 0x08, 0x00, 0x01, 0x00, 0x02, 0x0a, 0x04, 0x00, 0x01, 0x00, 0x43, 0x00 };
 
                 byte[] buffer = reset;
-                int ret = SendHCICommand(buffer, (uint)buffer.Length);
+                int ret = SendHCICommand(devId, buffer, (uint)buffer.Length);
                 string result = ( ret != 0 ) ? "OK" : "Fail";
 
                 string packetType = "COMMAND_PACKET";
                 string packetData = BytesToHex(buffer, buffer.Length);
                 Console.WriteLine( string.Format( "{0}: {1} {2}", packetType, packetData, result ) );
 
+                Thread.Sleep(1000);
+                
+                for (ushort i = ushort.MinValue; i < ushort.MaxValue; ++i) 
+                {
+                    string manufacturer = GetManufacturerName(i);
+                    if (manufacturer == null) break;
+                    Console.WriteLine(manufacturer);
+                }
+
+                Console.WriteLine("Press any key...");
                 Console.ReadLine();
 
                 /*
@@ -115,9 +152,8 @@ namespace fbtrtsharp
                 packetData = BytesToHex(bigBuffer, (int)readed);
                 Console.WriteLine(string.Format("{0}: {1} {2}", packetType, packetData, result));
                  */
-
                 
-                DetachHardware();
+                CloseDevice(devId);
             }
         }
 

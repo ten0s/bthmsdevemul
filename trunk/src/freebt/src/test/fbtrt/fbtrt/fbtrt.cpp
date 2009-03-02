@@ -30,7 +30,7 @@ BOOL Export_SubscribeHCIEvent( HCI_EVENT_LISTENER hciEventListener );
 #include "fbtlog.h"
 #include "fbtHciCmds.h"
 
-#define DEVICE_SYM_LINK	"\\\\.\\FbtUsb"
+#define DEVICE_SYM_LINK	_T("\\\\.\\FbtUsb")
 
 
 #define MAX_BUFFER_SIZE	257
@@ -48,13 +48,14 @@ int _tmain(int argc, _TCHAR* argv[])
 {
 	unsigned char buffer[MAX_BUFFER_SIZE];
 
-   fbtLogSetFile("fbtrt.log");
-   fbtLogSetLevel(255);
+   SetLogFileName(_T("fbtrt.log"));
+   SetLogLevel(255);
 
-   SubscribeHCIEvent( /*g_bthHw, */OnEvent );
-   
-   if ( AttachHardware( /*g_bthHw*/ ) )
+   int deviceId = OpenDevice();
+   if ( deviceId != INVALID_DEVICE_ID )
 	{
+      SubscribeHCIEvent( deviceId, OnEvent );
+
       buffer[0] = FBT_HCI_SYNC_HCI_COMMAND_PACKET;
       buffer[1] = 0x03;
 		buffer[2] = 0x0c;
@@ -63,14 +64,16 @@ int _tmain(int argc, _TCHAR* argv[])
 		PrintBuffer( "Command", buffer, dwInLength );
 
 		DWORD dwOutLength = MAX_BUFFER_SIZE;
-		BOOL bRet = SendHCICommand( /*g_bthHw, */buffer, dwInLength );	
+		BOOL bRet = SendHCICommand( deviceId, buffer, dwInLength );	
 		if ( !bRet )
 		{
 			printf( "Error: %lu\n", GetLastError() );
 		}
                   
+      Sleep(1000);
+      printf("Press any key...\n");
       getchar();
-      DetachHardware( /*g_bthHw*/ );
+      CloseDevice( deviceId );
 	}
 
 	return 0;
@@ -95,9 +98,9 @@ BOOL AttachHardware( CBthEmulHci& hw )
       return FALSE;
    }
 
-   char szDeviceName[MAX_PATH];
+   TCHAR szDeviceName[MAX_PATH];
    for( int i = 0; i < 255 && !hw.IsAttached(); ++i ) {
-      sprintf_s( szDeviceName, sizeof( szDeviceName ), "%s%02d", DEVICE_SYM_LINK, i );
+      wsprintf( szDeviceName, _T("%s%02d"), DEVICE_SYM_LINK, i );
       hw.Attach( szDeviceName );
    }
 
