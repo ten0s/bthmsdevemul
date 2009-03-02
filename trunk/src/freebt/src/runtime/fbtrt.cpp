@@ -146,9 +146,11 @@ extern "C" BOOL __stdcall Export_CloseDevice( int devId )
          {
             delete bthHci;
             bthHci = NULL;
+            g_bthHci[index] = NULL;
 
             delete bthHw;
-            bthHw = NULL;            
+            bthHw = NULL;
+            g_bthHw[index] = NULL;
          }
       }
       else
