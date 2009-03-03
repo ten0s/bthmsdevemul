@@ -42,7 +42,7 @@ extern "C" {
 
    BOOL __stdcall SendHCICommand( int devId, BYTE* /*in*/pCmdBuffer, DWORD dwCmdLength );
    BOOL __stdcall GetDeviceInfo( int devId, LOCAL_DEVICE_INFO* /*in*/pDevInfo );   
-   LPCTSTR __stdcall GetManufacturerName( USHORT usManufacturer );
+   BOOL __stdcall GetManufacturerName( USHORT usManufacturer, LPTSTR /*in*/szInBuffer, DWORD dwBufferLength );
 
    typedef DWORD ( __stdcall *HCI_EVENT_LISTENER)( BYTE* /*in*/pEventBuffer, DWORD dwEventLength );
    BOOL __stdcall SubscribeHCIEvent( int devId, HCI_EVENT_LISTENER hciEventListener );

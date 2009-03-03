@@ -63,8 +63,8 @@ namespace fbtrtsharp
         [DllImport("fbtrt.dll", SetLastError = true)]
         public static extern int GetDeviceInfo(int devId, ref DEVICE_INFO devInfo);
 
-        [DllImport("fbtrt.dll", SetLastError = true, CharSet = CharSet.Unicode)]
-        public static extern string GetManufacturerName(ushort manufacturer);
+        [DllImport("fbtrt.dll", SetLastError = true)]
+        public static extern int GetManufacturerName(ushort manufacturer, IntPtr pBuffer, uint bufferLen);
 
         public delegate int HciEventListenerDelegate(IntPtr pEventBuf, uint eventLen);
 
@@ -122,13 +122,25 @@ namespace fbtrtsharp
                 Console.WriteLine( string.Format( "{0}: {1} {2}", packetType, packetData, result ) );
 
                 Thread.Sleep(1000);
+
+                int size = 256;
+                IntPtr hglobal = Marshal.AllocHGlobal(size);
                 
                 for (ushort i = ushort.MinValue; i < ushort.MaxValue; ++i) 
                 {
-                    string manufacturer = GetManufacturerName(i);
-                    if (manufacturer == null) break;
-                    Console.WriteLine(manufacturer);
+                    ret = GetManufacturerName(i, hglobal, (uint)size);
+                    if (ret == 1)
+                    {
+                        string manufacturer = Marshal.PtrToStringUni(hglobal);
+                        Console.WriteLine(manufacturer);
+                    }
+                    else 
+                    {
+                        break;
+                    }
                 }
+
+                Marshal.FreeHGlobal(hglobal);
 
                 Console.WriteLine("Press any key...");
                 Console.ReadLine();

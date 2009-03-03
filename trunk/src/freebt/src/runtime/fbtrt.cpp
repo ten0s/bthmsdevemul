@@ -32,7 +32,8 @@
 CBTHW* g_bthHw[MAX_DEVICES];
 CBthEmulHci* g_bthHci[MAX_DEVICES];
 DEVICE_INFO* g_bthDevInfo[MAX_DEVICES];
-CRITICAL_SECTION g_critSection;
+CRITICAL_SECTION g_hciCritSection; // defends g_bthHw, g_bthHci
+CRITICAL_SECTION g_addCritSection; // defends g_bthDevInfo, information and logs functions.
 
 BOOL AttachHardware( CBTHW& hw );
 BOOL DetachHardware( CBthEmulHci& hw );
@@ -53,12 +54,14 @@ BOOL APIENTRY DllMain( HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpRese
 	{
 	case DLL_PROCESS_ATTACH:
 		DisableThreadLibraryCalls( hModule );
-      InitializeCriticalSection( &g_critSection );
+      InitializeCriticalSection( &g_hciCritSection );
+      InitializeCriticalSection( &g_addCritSection );
       InitDevicesArray();
 		break;
 	case DLL_PROCESS_DETACH:
       UninitDevicesArray();
-      DeleteCriticalSection( &g_critSection );
+      DeleteCriticalSection( &g_hciCritSection );
+      DeleteCriticalSection( &g_addCritSection );
       _CrtDumpMemoryLeaks();
 		break;
 	}
@@ -69,7 +72,7 @@ BOOL APIENTRY DllMain( HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpRese
 
 extern "C" int __stdcall Export_OpenDevice()
 {
-   EnterCriticalSection( &g_critSection );
+   EnterCriticalSection( &g_hciCritSection );
 
    int devId = INVALID_DEVICE_ID;
    SetLastError( ERROR_NO_MORE_ITEMS );
@@ -93,7 +96,9 @@ extern "C" int __stdcall Export_OpenDevice()
                   memset( devInfo, 0, sizeof(DEVICE_INFO) );
                   if ( GetDeviceInfo( *bthHci, devInfo ) )
                   {
+                     EnterCriticalSection( &g_addCritSection );
                      g_bthDevInfo[i] = devInfo;
+                     LeaveCriticalSection( &g_addCritSection );
                   }
 
                   if ( ERROR_SUCCESS == bthHci->StartEventListener() )
@@ -123,13 +128,13 @@ extern "C" int __stdcall Export_OpenDevice()
       }
    }	
    
-   LeaveCriticalSection( &g_critSection );
+   LeaveCriticalSection( &g_hciCritSection );
    return devId;
 }
 
 extern "C" BOOL __stdcall Export_CloseDevice( int devId )
 {
-   EnterCriticalSection( &g_critSection );
+   EnterCriticalSection( &g_hciCritSection );
 
 	BOOL bRet = FALSE;
    
@@ -163,13 +168,13 @@ extern "C" BOOL __stdcall Export_CloseDevice( int devId )
       SetLastError( ERROR_INVALID_PARAMETER );
    }
 
-   LeaveCriticalSection( &g_critSection );
+   LeaveCriticalSection( &g_hciCritSection );
    return bRet;
 }
 
 extern "C" BOOL __stdcall Export_SendHCICommand( int devId, BYTE* /*in*/pCmdBuffer, DWORD /*in*/dwCmdLength )
 {
-	EnterCriticalSection( &g_critSection );
+	EnterCriticalSection( &g_hciCritSection );
 
    BOOL bRet = FALSE;
 
@@ -193,14 +198,14 @@ extern "C" BOOL __stdcall Export_SendHCICommand( int devId, BYTE* /*in*/pCmdBuff
       SetLastError( ERROR_INVALID_PARAMETER );
    }
 
-   LeaveCriticalSection( &g_critSection );
+   LeaveCriticalSection( &g_hciCritSection );
    return bRet;
 }
 
 extern "C" BOOL __stdcall Export_GetDeviceInfo( int devId, LOCAL_DEVICE_INFO* pDevInfo )
 {
-   EnterCriticalSection( &g_critSection );
-
+   EnterCriticalSection( &g_addCritSection );
+   
    BOOL bRet = FALSE;
 
    if ( devId >= 0 && devId < MAX_DEVICES )
@@ -230,21 +235,33 @@ extern "C" BOOL __stdcall Export_GetDeviceInfo( int devId, LOCAL_DEVICE_INFO* pD
       SetLastError( ERROR_INVALID_PARAMETER );
    }
 
-   LeaveCriticalSection( &g_critSection );
+   LeaveCriticalSection( &g_addCritSection );
    return bRet;
 }
 
-extern "C" LPCTSTR __stdcall Export_GetManufacturerName( USHORT usManufacturer )
+extern "C" BOOL __stdcall Export_GetManufacturerName( USHORT usManufacturer, LPTSTR /*in*/szInBuffer, DWORD dwBufferLength )
 {
-   EnterCriticalSection( &g_critSection );
-   LPCTSTR szRet = CHci::GetManufacturerName( usManufacturer );   
-   LeaveCriticalSection( &g_critSection );
-   return szRet;
+   EnterCriticalSection( &g_addCritSection );
+
+   BOOL bRet = FALSE;
+
+   DWORD dwRet = CHci::GetManufacturerName( usManufacturer, szInBuffer, dwBufferLength );
+   if ( dwRet == ERROR_SUCCESS )
+   {
+      bRet = TRUE;
+   }
+   else
+   {
+      SetLastError( dwRet );
+   }
+   
+   LeaveCriticalSection( &g_addCritSection );
+   return bRet;
 }
 
 extern "C" BOOL __stdcall Export_SubscribeHCIEvent( int devId, HCI_EVENT_LISTENER hciEventListener )
 {
-   EnterCriticalSection( &g_critSection );
+   EnterCriticalSection( &g_hciCritSection );
 
    BOOL bRet = FALSE;
 
@@ -268,23 +285,23 @@ extern "C" BOOL __stdcall Export_SubscribeHCIEvent( int devId, HCI_EVENT_LISTENE
       SetLastError( ERROR_INVALID_PARAMETER );
    }
 
-   LeaveCriticalSection( &g_critSection );
+   LeaveCriticalSection( &g_hciCritSection );
    return bRet;
 }
 
 extern "C" BOOL __stdcall Export_SetLogFileName( LPCTSTR szFileName )
 {
-   EnterCriticalSection( &g_critSection );
+   EnterCriticalSection( &g_addCritSection );
    BOOL bRet = fbtLogSetFile( szFileName );
-   LeaveCriticalSection( &g_critSection );
+   LeaveCriticalSection( &g_addCritSection );
    return bRet;
 }
 
 extern "C" BOOL __stdcall Export_SetLogLevel( UINT uLevel )
 {
-   EnterCriticalSection( &g_critSection );
+   EnterCriticalSection( &g_addCritSection );
    fbtLogSetLevel( uLevel );
-   LeaveCriticalSection( &g_critSection );
+   LeaveCriticalSection( &g_addCritSection );
    return TRUE;
 }
 
@@ -351,21 +368,23 @@ BOOL SubscribeHCIEvent( CBthEmulHci& hw, HCI_EVENT_LISTENER hciEventListener )
 
 void InitDevicesArray()
 {
-   EnterCriticalSection( &g_critSection );
+   EnterCriticalSection( &g_hciCritSection );
    
    for( int i = 0; i < MAX_DEVICES; ++i )
    {
       g_bthHw[i] = NULL;
       g_bthHci[i] = NULL;
+      EnterCriticalSection( &g_addCritSection );
       g_bthDevInfo[i] = NULL;
+      LeaveCriticalSection( &g_addCritSection );
    }   
 
-   LeaveCriticalSection( &g_critSection );
+   LeaveCriticalSection( &g_hciCritSection );
 }
 
 void UninitDevicesArray()
 {
-   EnterCriticalSection( &g_critSection );
+   EnterCriticalSection( &g_hciCritSection );
 
    for( int i = 0; i < MAX_DEVICES; ++i )
    {
@@ -383,10 +402,12 @@ void UninitDevicesArray()
 
       if ( g_bthDevInfo[i] != NULL )
       {
+         EnterCriticalSection( &g_addCritSection );
          delete g_bthDevInfo[i];
          g_bthDevInfo[i] = NULL;
+         LeaveCriticalSection( &g_addCritSection );
       }
    }   
 
-   LeaveCriticalSection( &g_critSection );
+   LeaveCriticalSection( &g_hciCritSection );
 }
