@@ -1,7 +1,7 @@
 =======================================
 Bluetooth for Microsoft Device Emulator
-version 0.9.3
-December 14th, 2009
+version 0.9.4
+March 3th, 2009
 =======================================
 
 INTRODUCTION
@@ -110,7 +110,7 @@ LEGAL
 =====
 
 Bluetooth for Microsoft Device Emulator
-Copyright (C) 2008 Dmitry Klionsky <dm.klionsky@gmail.com>
+Copyright (C) 2008-2009 Dmitry Klionsky <dm.klionsky@gmail.com>
 
 FreeBT
 Copyright (C) 2004 Antony C. Roberts <http://www.freebt.net/>
