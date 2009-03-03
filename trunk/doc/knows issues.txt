@@ -17,6 +17,12 @@ Other info:
 Error retrieving information from user datastore (Devices)
 http://msdn.microsoft.com/en-us/library/ms184403.aspx
 
+3. Vista ASLR & DEP
+address space layout randomization
+data execution prevention
+http://forum.ixbt.com/topic.cgi?id=22:63659
+http://vistasupport.mvps.org/disable_data_execution_prevention.htm
+
 
 
 

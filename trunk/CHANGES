@@ -1,3 +1,6 @@
+ver 0.9.4:
+* Changed GetManufacturerName method's getting results. Looks like problems with Vista ASLR & DEP.
+
 ver 0.9.3:
 * Improved device side logging.
 * Increased FBT_HCI_DATA_MAX_SIZE to 1024.
