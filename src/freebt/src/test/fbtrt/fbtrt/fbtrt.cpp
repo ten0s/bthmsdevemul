@@ -71,6 +71,21 @@ int _tmain(int argc, _TCHAR* argv[])
 		}
                   
       Sleep(1000);
+
+      TCHAR szBuffer[256];
+      for (short i = 0; i < MAXINT16; ++i) 
+      {
+         bRet = GetManufacturerName(i, szBuffer, sizeof(szBuffer)/sizeof(szBuffer[0]));
+         if (bRet == TRUE) 
+         {
+            wprintf(L"%s\n", szBuffer);
+         }
+         else
+         {
+            break;
+         }         
+      }
+
       printf("Press any key...\n");
       getchar();
       CloseDevice( deviceId );

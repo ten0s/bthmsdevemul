@@ -119,6 +119,8 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				Optimization="0"
+				WholeProgramOptimization="false"
 				AdditionalIncludeDirectories="..\..\..\runtime, ..\..\..\include; ..\..\..\driver"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="0"

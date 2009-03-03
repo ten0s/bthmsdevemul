@@ -14,6 +14,7 @@
  * The original and principal author is Antony C. Roberts http://www.freebt.net.  
  * Other authors are noted in the change history that follows (in reverse chronological order):
  *
+ * 2009-03-03 Dmitry Klionsky Changed GetManufacturerName method's getting results. Looks like problems with Vista ASLR & DEP.
  * 2008-11-30 Dmitry Klionsky Added UNICODE support.
  * 2008-11-30 Dmitry Klionsky CBTHW class is no longer the base class. The CHci class receives a reference on CBTHW class at its construction.
  * 2008-11-30 Dmitry Klionsky More manufacturers were added.
@@ -444,21 +445,33 @@ LPCTSTR CHci::GetEventText(BYTE Event)
     return g_fbt_hci_Event[Event];
 
     FBT_CATCH_RETURN(NULL)
-
 }
 
 // Get the name of a Manufacturer
-LPCTSTR CHci::GetManufacturerName(USHORT Company)
+DWORD CHci::GetManufacturerName(USHORT Company, LPTSTR /*in*/szInBuffer, DWORD dwBufferLength)
 {
    FBT_TRY
+      
+      // zero the buffer.
+      memset(szInBuffer, 0, dwBufferLength);
    
-      if (Company >= sizeof(g_fbt_hci_Company)/sizeof(g_fbt_hci_Company[0]))
-         return (LPTSTR)NULL;
+      // check for correct input.
+      if (Company >= sizeof(g_fbt_hci_Company)/sizeof(g_fbt_hci_Company[0])) {
+         return ERROR_INVALID_PARAMETER;
+      }
 
-    return g_fbt_hci_Company[Company];
+      LPCTSTR szManufacturer = g_fbt_hci_Company[Company];
 
-    FBT_CATCH_RETURN(NULL)
+      // check for buffer size.
+      if (_tcslen(szManufacturer) + 1 > dwBufferLength) {
+         return ERROR_INSUFFICIENT_BUFFER;
+      }
 
+      _tcscpy(szInBuffer, szManufacturer);
+
+      return ERROR_SUCCESS;
+
+    FBT_CATCH_RETURN(ERROR_INTERNAL_ERROR)
 }
 
 // Compare two BDADDRs
@@ -471,15 +484,12 @@ DWORD CHci::CompareBDADDRs(BYTE BD_ADDR1[FBT_HCI_BDADDR_SIZE], BYTE BD_ADDR2[FBT
 		if (BD_ADDR1[i]!=BD_ADDR2[i])
 		{
 			return 1;
-
 		}
-
 	}
 
 	return ERROR_SUCCESS;
 
 	FBT_CATCH_RETURN(0)
-
 }
 
 // Commands
@@ -531,7 +541,6 @@ DWORD CHci::SendHciCommand(const PFBT_HCI_CMD_HEADER lpCommand, DWORD dwBufferSi
     return ERROR_SUCCESS;
 
     FBT_CATCH_RETURN(ERROR_INTERNAL_ERROR)
-
 }
 
 DWORD CHci::SendReset()

@@ -97,8 +97,8 @@ namespace BthEmul
         [DllImport("fbtrt.dll", SetLastError=true)]
         public static extern int GetDeviceInfo(int devId, ref DEVICE_INFO devInfo);
 
-        [DllImport("fbtrt.dll", SetLastError=true, CharSet=CharSet.Unicode)]
-        public static extern string GetManufacturerName(ushort manufacturer);
+        [DllImport("fbtrt.dll", SetLastError = true)]
+        private static extern int GetManufacturerName(ushort manufacturer, IntPtr pBuffer, uint bufferLen);
 
         public delegate int HciEventListenerDelegate(IntPtr pEventBuf, uint eventLen);
 
@@ -110,5 +110,36 @@ namespace BthEmul
 
         [DllImport("fbtrt.dll", SetLastError = true)]
         public static extern int SetLogLevel(int level);
+
+        public static string GetManufacturerName(ushort manufacturer)
+        {
+            string strManufacturer = "";
+
+            IntPtr hglobal = IntPtr.Zero;
+            try
+            {
+                int size = 256;
+                hglobal = Marshal.AllocHGlobal(size);
+
+                int ret = GetManufacturerName(manufacturer, hglobal, (uint)size);
+                if (ret == 1)
+                {
+                    strManufacturer = Marshal.PtrToStringUni(hglobal);
+                }                
+            }
+            catch
+            {
+                // just do nothing...
+            }
+            finally
+            {
+                if (hglobal != IntPtr.Zero)
+                {
+                    Marshal.FreeHGlobal(hglobal);
+                }                
+            }            
+
+            return strManufacturer;
+        }
     }
 }

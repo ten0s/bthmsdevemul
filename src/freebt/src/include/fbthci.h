@@ -31,7 +31,7 @@ public:
 
 	static LPCTSTR GetEventText(BYTE Event);
 	static LPCTSTR GetStatusText(BYTE Status);
-	static LPCTSTR GetManufacturerName(USHORT Company);
+	static DWORD GetManufacturerName(USHORT Company, LPTSTR /*in*/szInBuffer, DWORD dwBufferLength);
 
     virtual DWORD OnCommandComplete(BYTE NumHCICommandPackets, USHORT CommandOpcode, BYTE *Parameters, DWORD ParameterLength);
     virtual DWORD OnCommandStatus(BYTE Status, BYTE NumHCICommandPackets, USHORT CommandOpcode);
