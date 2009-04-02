@@ -1,16 +1,16 @@
-=======================================
-Bluetooth для Microsoft Device Emulator
+п»ї=======================================
+Bluetooth РґР»СЏ Microsoft Device Emulator
 version 0.9.4
 April 2nd, 2009
 =======================================
 
 
-ВСТУПЛЕНИЕ
+Р’РЎРўРЈРџР›Р•РќРР•
 ==========
 
-Bluetooth для Microsoft Device Emulator добавляет поддержку Bluetooth в эмулятор.
+Bluetooth РґР»СЏ Microsoft Device Emulator РґРѕР±Р°РІР»СЏРµС‚ РїРѕРґРґРµСЂР¶РєСѓ Bluetooth РІ СЌРјСѓР»СЏС‚РѕСЂ.
 
-Bluetooth был проверен со следующими образами операционных систем:
+Bluetooth Р±С‹Р» РїСЂРѕРІРµСЂРµРЅ СЃРѕ СЃР»РµРґСѓСЋС‰РёРјРё РѕР±СЂР°Р·Р°РјРё РѕРїРµСЂР°С†РёРѕРЅРЅС‹С… СЃРёСЃС‚РµРј:
 
   * Windows Mobile 5.0 Pocket PC SDK
   * Windows Mobile 5.0 Smartphone SDK
@@ -18,10 +18,10 @@ Bluetooth был проверен со следующими образами операционных систем:
   * Windows Mobile 6 Standard SDK 
 
 
-ТРЕБОВАНИЯ
+РўР Р•Р‘РћР’РђРќРРЇ
 ==========
 
-Пожалуйста обратите внимание, что ВСЕ ниже перечисленное ДОЛЖНО БЫТЬ установлено:
+РџРѕР¶Р°Р»СѓР№СЃС‚Р° РѕР±СЂР°С‚РёС‚Рµ РІРЅРёРјР°РЅРёРµ, С‡С‚Рѕ Р’РЎР• РЅРёР¶Рµ РїРµСЂРµС‡РёСЃР»РµРЅРЅРѕРµ Р”РћР›Р–РќРћ Р‘Р«РўР¬ СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ:
 
   * Windows XP or Windows Vista 32-bit with the lastest service packs.
   * Microsoft Visual Studio 2005 or 2008 with the lastest service packs. You Visual Studio installation must include the Smart Device Programmability feature.
@@ -32,13 +32,13 @@ Bluetooth был проверен со следующими образами операционных систем:
 Also you should have an available Bluetooth USB dongle.
 
 
-ВНИМАНИЕ
+Р’РќРРњРђРќРР•
 ========
 
 This version of Bluetooth for Microsoft Device Emulator uses FreeBT project <http://freebt.net/> to access the Bluetooth USB dongle.
 
 
-ОБЗОР АРХИТЕКТУРЫ
+РћР‘Р—РћР  РђР РҐРРўР•РљРўРЈР Р«
 =================
 
 The project consists from the followings components: 
@@ -53,7 +53,7 @@ The project consists from the followings components:
     * Connected Bluetooth USB device.
 
 
-АППАРАТНОЕ ОБЕСПЕЧЕНИЕ
+РђРџРџРђР РђРўРќРћР• РћР‘Р•РЎРџР•Р§Р•РќРР•
 ======================
 
 The FreeBT USB Driver is written in accordance with the Bluetooth USB HCI spec. Any device that follows the recommendations set down in that spec should be compatible with the FreeBT driver.
@@ -69,7 +69,7 @@ Specifically, FreeBT USB has been tested with the following devices:
 Actually, both of these devices incorporate a CSR BlueCore01 chip, (as do most of the commercially available Bluetooth dongles at present), which (apart from their amplifiers) makes them identical.
 
 
-УСТАНОВКА BLUETOOTH USB ДРАЙВЕРА
+РЈРЎРўРђРќРћР’РљРђ BLUETOOTH USB Р”Р РђР™Р’Р•Р Рђ
 ================================
 
   1. Open the Windows Device Manager.
@@ -77,7 +77,7 @@ Actually, both of these devices incorporate a CSR BlueCore01 chip, (as do most o
   3. Click the right mouse button and select "Update Driver..." in the popup-menu.
   4. Select "No, not this time" and click "Next >".
   5. Select "Install from a list or specific location" and click "Next >".
-  6. Select "Don’t search. I will choose the driver to install" and click "Next >".
+  6. Select "DonвЂ™t search. I will choose the driver to install" and click "Next >".
   7. Select the device driver and click the "Have Disk...".
   8. In the Locate File dialog, browse to fbtusb.inf file and click "Next >".
   9. When a "Hardware Installation warning" appears, click "Continue Anyway".
@@ -87,7 +87,7 @@ Actually, both of these devices incorporate a CSR BlueCore01 chip, (as do most o
 Please refer to FreeBT documentation for more details.
 
 
-УСТАНОВКА
+РЈРЎРўРђРќРћР’РљРђ
 =========
 
   1. Install the Visual Studio 2005 or 2008 with the latest service packs. Your Visual Studio installation should include the Smart Device    Programmability.
@@ -98,7 +98,7 @@ Please refer to FreeBT documentation for more details.
   6. Install the Microsoft Remote Tools Framework 1.00 <http://www.microsoft.com/downloads/details.aspx?FamilyID=35e9ef0f-833f-4987-9d1f-157a0a6a76e4&DisplayLang=en>.
 
 
-НАЧАЛО РАБОТЫ
+РќРђР§РђР›Рћ Р РђР‘РћРўР«
 =============
 
   1. Install the FreeBT USB Driver as described in the BLUETOOTH USB DRIVER INSTALLATION section.
@@ -117,7 +117,7 @@ Please refer to FreeBT documentation for more details.
   14. It is possible to enable/disable communication logging. Communication logging allows to see communication activities between the emulator and the Bluetooth device.
 
 
-РЕШЕНИЕ ПРОБЛЕМ
+Р Р•РЁР•РќРР• РџР РћР‘Р›Р•Рњ
 ===============
 
   Q. I've installed the Free BT Driver, but after deploying the emulator, it is still not working.
@@ -142,16 +142,16 @@ You may also have problems with the FreeBT USB Driver itself. The driver is stil
 But the driver works quite stable for me at least. I encourage you if you have such problems and have experience in the Windows driver development try to improve the driver and share your results.
 
 
-БЛАГОДАРНОСТИ
+Р‘Р›РђР“РћР”РђР РќРћРЎРўР
 =============
 
-Спасибо Antony C. Roberts за FreeBT <http://freebt.net/> проект. Без него этот проект мог бы быть невозможным.
+РЎРїР°СЃРёР±Рѕ Antony C. Roberts Р·Р° FreeBT <http://freebt.net/> РїСЂРѕРµРєС‚. Р‘РµР· РЅРµРіРѕ СЌС‚РѕС‚ РїСЂРѕРµРєС‚ РјРѕРі Р±С‹ Р±С‹С‚СЊ РЅРµРІРѕР·РјРѕР¶РЅС‹Рј.
 
 
-ПРАВОВАЯ ИНФОРМАЦИЯ
+РџР РђР’РћР’РђРЇ РРќР¤РћР РњРђР¦РРЇ
 ===================
 
-Bluetooth для Microsoft Device Emulator
+Bluetooth РґР»СЏ Microsoft Device Emulator
 Copyright (C) 2008-2009 Dmitry Klionsky <dm.klionsky@gmail.com>
 
 FreeBT
