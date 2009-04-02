@@ -104,7 +104,7 @@ Please refer to FreeBT documentation for more details.
 = TROUBLESHOOTING =
 
 Q. I've installed the Free BT Driver, but after deploying the emulator, it is still not working.<br>
-A. Install the Microsoft Remote Tools Framework 1.00 if you haven't done it yet. Launch the Remote Tools Framework plugin BthEmulManager.cetool from "RTFx Plugin" folder.
+A. Install the Microsoft Remote Tools Framework 1.00 if you haven't done it yet. Launch the Remote Tools Framework plugin {{{BthEmulManager.cetool}}} from "RTFx Plugin" folder.
 
 
 Q. I'm trying to connecter Pocket PC 2003 SE Emulator but I receive an error all the time: "The device Pocket PC 2003 SE VGA Emulator has a CPU type of ARMV4 and an operating system version of 4.21."<br>
@@ -116,7 +116,7 @@ A. Win2K&XP: Control Panel -> System -> Hardware tab -> Device Manager
 <br>Vista: Control Panel -> Hardware and Sound -> Device Manager
 
 
-Q. I have started the BthEmulManager.cetool plugin for the first time but nothinng happens. There isn't Bluetooth in the emulator.<br>
+Q. I have started the {{{BthEmulManager.cetool}}} plugin for the first time but nothinng happens. There isn't Bluetooth in the emulator.<br>
 A. Try to restart the plugin for the previously choosen emulator. Also go to Settings -> Connections -> Bluetooth -> Mode tab and turn on Bluetooth.
 
 You may also have problems with the FreeBT USB Driver itself. The driver is still (and will probably remain at this stage) in alpha version. 
