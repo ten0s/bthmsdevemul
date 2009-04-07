@@ -1,0 +1,134 @@
+﻿#summary Readme notes for the project.
+
+= INTRODUCTION =
+
+Bluetooth for Microsoft Device Emulator enables Bluetooth communication from and to the emulator.
+
+Bluetooth connectivity with the Microsoft Device Emulator has been tested with the following SDKs images:
+  * Windows Mobile 5.0 Pocket PC SDK
+  * Windows Mobile 5.0 Smartphone SDK
+  * Windows Mobile 6 Professional SDK
+  * Windows Mobile 6 Standard SDK
+
+= REQUIREMENTS =
+
+Please notice that you MUST have installed ALL the following:
+
+  * Windows XP or Windows Vista 32-bit with the lastest service packs.
+  * Microsoft Visual Studio 2005 or 2008 with the lastest service packs. You Visual Studio installation must include the Smart Device Programmability feature.
+  * Windows Mobile 5.0 Pocket PC SDK and/or Windows Mobile 5.0 Smartphone SDK and/or Windows Mobile 6 Professional SDK and/or Windows Mobile 6 Standard SDK emulator images
+  * [http://www.microsoft.com/downloads/details.aspx?familyid=A6F6ADAF-12E3-4B2F-A394-356E2C2FB114&displaylang=en Microsoft Device Emulator (Recommended: Version 3.0)].
+  * [http://www.microsoft.com/downloads/details.aspx?FamilyID=35e9ef0f-833f-4987-9d1f-157a0a6a76e4&DisplayLang=en Microsoft Remote Tools Framework 1.00].
+
+Also you should have an available Bluetooth USB dongle.
+
+= NOTE =
+
+This version of Bluetooth for Microsoft Device Emulator uses [http://freebt.net/ FreeBT] project to access the Bluetooth USB dongle.
+
+= ARCHITECTURE OVERVIEW =
+
+The project consists from the followings components: 
+  # Device side 
+    * [http://msdn.microsoft.com/en-us/library/ms890918.aspx Bluetooth HCI Transport Driver].
+    * [http://msdn.microsoft.com/en-us/library/ms923741.aspx Serial Port Driver] to abstract the transport driver from  knowing means of communication.
+    * Microsoft Remote Tools Framework remote agent.
+  # Desktop side
+    * Microsoft Remote Tools Framework desktop plugin.
+    * FreeBT USB Driver runtime.
+    * FreeBT USB Driver.
+    * Connected Bluetooth USB device.
+
+http://bthmsdevemul.googlecode.com/svn/trunk/site/images/architecture.png 
+
+= HARDWARE =
+
+The FreeBT USB Driver is written in accordance with the  Bluetooth USB HCI spec. Any device that follows
+the recommendations set down in that spec should be compatible with the FreeBT USB driver.
+
+The fbtusb.inf will, by default, install any USB dongle that identifies itself with Class 0xE0 (Wireless Controller),
+SubClass 0x01 (RF Controller) and Protocol 0x01 (Bluetooth programming), in accordance with the USB HCI spec.
+
+Specifically, FreeBT USB has been tested with the following devices:
+
+  * Acer BT-700 (Class 1 device)
+  * D-Link DBT-120 (Class 2 device)
+  * Any CSR or Silicon Wave-based USB devices
+
+Actually, both of these devices incorporate a CSR BlueCore01 chip, (as do most of the commercially available
+Bluetooth dongles at present), which (apart from their amplifiers) makes them identical.
+
+
+= BLUETOOTH USB DRIVER INSTALLATION =
+
+  # Open the Windows Device Manager.
+  # In the Device Manager, locate the Bluetooth device to be used as the FreeBT USB device.
+  # Click the right mouse button and select "Update Driver..." in the popup-menu.
+  # Select "No, not this time" and click "Next >".
+  # Select "Install from a list or specific location" and click "Next >".
+  # Select "Don't search. I will choose the driver to install" and click "Next >".
+  # Select the device driver and click the "Have Disk...".
+  # In the Locate File dialog, browse to fbtusb.inf file and click "Next >".
+  # When a "Hardware Installation warning" appears, click "Continue Anyway".
+  # Once the installation has been completed, click "Finish".
+  # The Device Manager should now display "FreeBT USB Driver" in the list of USB controllers.
+
+Please refer to FreeBT documentation for more details.
+
+= INSTALLATION =
+
+  # Install the Visual Studio 2005 or 2008 with the latest service packs. Your Visual Studio installation should include the Smart Device Programmability feature.
+  # Install the Microsoft Device Emulator. You should have already installed one along with the VS installation. Update it to the [http://www.microsoft.com/downloads/details.aspx?familyid=A6F6ADAF-12E3-4B2F-A394-356E2C2FB114&displaylang=en Microsoft Device Emulator 3.0 -- Standalone Release].
+  # Install emulator images you need.
+  # You must have an USB Bluetooth dongle available. Plugin in it into an available USB port.
+  # Install the FreeBT USB driver as described in the BLUETOOTH USB DRIVER INSTALLATION section.
+  # Install the [http://www.microsoft.com/downloads/details.aspx?FamilyID=35e9ef0f-833f-4987-9d1f-157a0a6a76e4&DisplayLang=en Microsoft Remote Tools Framework 1.00].
+
+= GETTING STARTED =
+
+  # Install the FreeBT USB Driver as described in the BLUETOOTH USB DRIVER INSTALLATION section.
+  # Install all REQUIREMENTS section as described in the INSTALLATION section.
+  # Launch the Remote Tools Framework plugin {{{BthEmulManager.cetool}}} from "RTFx Plugin" folder.
+  # Select an emulator image from the list.
+  # Wait for the emulator to be connected.
+  # Select "Bluetooth for Microsoft Device Emulator" node.
+  # If you have a Bluetooth device attached succesfully then the Bluetooth device info (Address, Manufacturer, HCI Version, LMP Version) will be displayed. Bluetooth should now be operational in your emulator. An error code with the description will be displayed otherwise.
+  # To clear the communication log click the right mouse button and select "Clear All".
+  # To copy current device information to the clipboard select "Bluetooth for Microsoft Device Emulator" node, click the right mouse button and select "Copy to Clipboard".
+  # To switch off Bluetooth on the emulator click "Connection" menu item and select "Disconnect from ... emulator".
+  # Microsoft Remote Tools Framework allows you to start two device emulators at the same time. If you have installed two or more FreeBT USB devices click "Windows" menu item and select "Split Windows View". Repeat steps 3-6. You will get two Bluetooth powered emulators are running simultaneously.
+  # It is possible to enable/disable device side logging. If you enable "Device Logging" checkbox then remote logging will be enabled on the emulator. Have a look at {{{\\Temp}}} directory on the emulator. There should be created {{{btd_bthemul_0.txt}}}, {{{btd_BthEmulAgent_0.txt}}}, {{{btd_bthemulcom_0.txt}}} files.
+  # It is possible to enable/disable desktop side logging. If you enable "Desktop Logging" checkbox then local logging will be enabled. Have a look at your installation directory. There should be created {{{BthEmulManager.txt}}} file.
+  # It is possible to enable/disable communication logging. Communication logging allows to see communication activities between the emulator and the Bluetooth device.
+
+= TROUBLESHOOTING =
+
+Q. I've installed the Free BT Driver, but after deploying the emulator, it is still not working.<br>
+A. Install the Microsoft Remote Tools Framework 1.00 if you haven't done it yet. Launch the Remote Tools Framework plugin {{{BthEmulManager.cetool}}} from "RTFx Plugin" folder.
+
+
+Q. I'm trying to connecter Pocket PC 2003 SE Emulator but I receive an error all the time: "The device Pocket PC 2003 SE VGA Emulator has a CPU type of ARMV4 and an operating system version of 4.21."<br>
+A. Pocket PC 2003 and Smartphone 2003 aren't supported yet.
+
+
+Q. Which Windows Device Manager the README refers to ?<br>
+A. Win2K&XP: Control Panel -> System -> Hardware tab -> Device Manager
+<br>Vista: Control Panel -> Hardware and Sound -> Device Manager
+
+
+Q. I have started the {{{BthEmulManager.cetool}}} plugin for the first time but nothinng happens. There isn't Bluetooth in the emulator.<br>
+A. Try to restart the plugin for the previously choosen emulator. Also go to Settings -> Connections -> Bluetooth -> Mode tab and turn on Bluetooth.
+
+You may also have problems with the FreeBT USB Driver itself. The driver is still (and will probably remain at this stage) in alpha version. 
+There are a number of reports saying it has problems. The problems with this driver are the following:
+  # It stops working for no reason.
+  # It may miss packets in write/read operations. The problems start when you send large packets very fast. The most probably the problem in an incorrect using HCI buffers (Read Buffer Size Command, Number Of Completed Packets Event).
+  # It isn't stable with some chipset like CSR.
+
+But the driver works quite stable for me at least. I encourage you if you have such problems and have experience in the Windows driver development
+try to improve the driver and share your results.
+
+
+= THANKS =
+
+Thanks to Antony C. Roberts for his [http://freebt.net/ FreeBT] open source stack. Without it this release would not have been possible.
