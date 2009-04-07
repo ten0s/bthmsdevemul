@@ -1,4 +1,4 @@
-#summary Readme notes for the project.
+﻿#summary Readme notes for the project.
 
 = INTRODUCTION =
 
@@ -66,7 +66,7 @@ Bluetooth dongles at present), which (apart from their amplifiers) makes them id
   # Click the right mouse button and select "Update Driver..." in the popup-menu.
   # Select "No, not this time" and click "Next >".
   # Select "Install from a list or specific location" and click "Next >".
-  # Select "Don’t search. I will choose the driver to install" and click "Next >".
+  # Select "Don't search. I will choose the driver to install" and click "Next >".
   # Select the device driver and click the "Have Disk...".
   # In the Locate File dialog, browse to fbtusb.inf file and click "Next >".
   # When a "Hardware Installation warning" appears, click "Continue Anyway".
