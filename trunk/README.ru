@@ -10,7 +10,7 @@ April 2nd, 2009
 
 Bluetooth для Microsoft Device Emulator добавляет поддержку Bluetooth в эмулятор.
 
-Bluetooth был проверен со следующими образами операционных систем:
+Bluetooth был проверен со следующими образами операционных систем (ОС):
 
   * Windows Mobile 5.0 Pocket PC SDK
   * Windows Mobile 5.0 Smartphone SDK
@@ -23,91 +23,91 @@ Bluetooth был проверен со следующими образами о�
 
 Пожалуйста обратите внимание, что ВСЕ ниже перечисленное ДОЛЖНО БЫТЬ установлено:
 
-  * Windows XP or Windows Vista 32-bit with the lastest service packs.
-  * Microsoft Visual Studio 2005 or 2008 with the lastest service packs. You Visual Studio installation must include the Smart Device Programmability feature.
-  * Windows Mobile 5.0 Pocket PC SDK and/or Windows Mobile 5.0 Smartphone SDK and/or Windows Mobile 6 Professional SDK and/or Windows Mobile 6 Standard SDK emulator images
-  * Microsoft Device Emulator (Recommended: Version 3.0).
+  * Windows XP или Windows Vista 32-bit с последними пакетами обновлений.
+  * Microsoft Visual Studio 2005 или 2008 с последними пакетами обновлений. Ваша Visual Studio инсталяция должна включать Smart Device Programmability функциональность.
+  * Windows Mobile 5.0 Pocket PC SDK и/или Windows Mobile 5.0 Smartphone SDK и/или Windows Mobile 6 Professional SDK и/или Windows Mobile 6 Standard SDK образы ОС
+  * Microsoft Device Emulator (Рекомендавана: Версия 3.0).
   * Microsoft Remote Tools Framework 1.00. 
 
-Also you should have an available Bluetooth USB dongle.
+Также у вас должно быть свободное Bluetooth USB устройство.
 
 
 ВНИМАНИЕ
 ========
 
-This version of Bluetooth for Microsoft Device Emulator uses FreeBT project <http://freebt.net/> to access the Bluetooth USB dongle.
+Эта версия Bluetooth для Microsoft Device Emulator использует FreeBT проект <http://freebt.net/> для доступа к Bluetooth USB устройству.
 
 
 ОБЗОР АРХИТЕКТУРЫ
 =================
 
-The project consists from the followings components: 
-  1. Device side 
-    * Bluetooth HCI Transport Driver <http://msdn.microsoft.com/en-us/library/ms890918.aspx>.
-    * Serial Port Driver <http://msdn.microsoft.com/en-us/library/ms923741.aspx> to abstract the transport driver from  knowing means of communication.
-    * Microsoft Remote Tools Framework remote agent.
-  2. Desktop side
-    * Microsoft Remote Tools Framework desktop plugin.
-    * FreeBT USB Driver runtime.
-    * FreeBT USB Driver.
-    * Connected Bluetooth USB device.
+Проект состоит из следующих компонентов:
+  1. На стороне эмулятора
+    * Bluetooth HCI транспортный драйвер <http://msdn.microsoft.com/en-us/library/ms890918.aspx>.
+    * Драйвер последовательного порта <http://msdn.microsoft.com/en-us/library/ms923741.aspx> для абстрагирования транспортного драйвера от знания конкретного средства связи.
+    * Microsoft Remote Tools Framework удаленный агент.
+  2. На стороне ПК
+    * Microsoft Remote Tools Framework ПК плагин.
+    * FreeBT USB библиотека времени выполнения.
+    * FreeBT USB драйвер.
+    * Подключенное Bluetooth USB устройство.
 
 
 АППАРАТНОЕ ОБЕСПЕЧЕНИЕ
 ======================
 
-The FreeBT USB Driver is written in accordance with the Bluetooth USB HCI spec. Any device that follows the recommendations set down in that spec should be compatible with the FreeBT driver.
+FreeBT USB драйвер написан в соответствие со Bluetooth USB HCI спецификацией. Любое устройство, которое следует рекомендациям этой спецификации должно быть совместимым с FreeBT USB драйвером.
 
-The fbtusb.inf will, by default, install any USB dongle that identifies itself with Class 0xE0 (Wireless Controller), SubClass 0x01 (RF Controller) and Protocol 0x01 (Bluetooth programming), in accordance with the USB HCI spec.
+fbtusb.inf по умолчанию устанавливается для любого USB устройства, которое идентифицирует себя как Класс 0xE0 (Беспроводное устройсво), Подкласс 0x01 (Высоко частотное устройство) и Протокол 0x01 (Bluetooth).
 
-Specifically, FreeBT USB has been tested with the following devices:
+FreeBT USB драйвер быть протестирован со следующими устройствами:
 
-  * Acer BT-700 (Class 1 device)
-  * D-Link DBT-120 (Class 2 device)
-  * Any CSR or Silicon Wave-based USB devices 
+  * Acer BT-700 (Класс 1)
+  * D-Link DBT-120 (Класс 2)
+  * Любые CSR или Silicon Wave USB устройства
 
-Actually, both of these devices incorporate a CSR BlueCore01 chip, (as do most of the commercially available Bluetooth dongles at present), which (apart from their amplifiers) makes them identical.
+В настоящее время, оба выше перечисленные устройства построены на базе CSR BlueCore01 чипа (как и большинство Bluetooth устройств на данный момент), что (исключая их усилители сигнала) делает их идентичными.
 
 
 УСТАНОВКА BLUETOOTH USB ДРАЙВЕРА
 ================================
 
-  1. Open the Windows Device Manager.
-  2. In the Device Manager, locate the Bluetooth device to be used as the FreeBT USB device.
-  3. Click the right mouse button and select "Update Driver..." in the popup-menu.
-  4. Select "No, not this time" and click "Next >".
-  5. Select "Install from a list or specific location" and click "Next >".
-  6. Select "Don’t search. I will choose the driver to install" and click "Next >".
-  7. Select the device driver and click the "Have Disk...".
-  8. In the Locate File dialog, browse to fbtusb.inf file and click "Next >".
+  1. Откройте Диспетчер устройств.
+  2. В Диспетчере устройств выберите Bluetooth устройство, которое должно быть использовано как FreeBT USB.
+  3. Нажмите правую кнопку мыши и выберите "Обновить драйвер..." из всплывающего меню.
+  4. Выберите "Нет, не в этот раз" и нажмите "Далее >".
+  5. Выберите "Install from a list or specific location" and click "Далее >".
+  6. Выберите "Don’t search. I will choose the driver to install" and click "Далее >".
+  7. Выберите the device driver and click the "Have Disk...".
+  8. In the Locate File dialog, browse to fbtusb.inf file and click "Далее >".
   9. When a "Hardware Installation warning" appears, click "Continue Anyway".
-  10. Once the installation has been completed, click "Finish".
-  11. The Device Manager should now display "FreeBT USB Driver" in the list of USB controllers. 
+  10. когда установка будет закончена, нажмите "Finish".
+  11. В списке USB устройств теперь должно быть добавлено "FreeBT USB Driver". 
 
-Please refer to FreeBT documentation for more details.
+Обращайтесь к FreeBT документации для получения более подробной информации.
 
 
 УСТАНОВКА
 =========
 
-  1. Install the Visual Studio 2005 or 2008 with the latest service packs. Your Visual Studio installation should include the Smart Device    Programmability.
-  2. Install the Microsoft Device Emulator. You should have already installed one along with the VS installation. Update it to the Microsoft Device Emulator 3.0 -- Standalone Release <http://www.microsoft.com/downloads/details.aspx?familyid=A6F6ADAF-12E3-4B2F-A394-356E2C2FB114&displaylang=en>.
-  3. Install emulator images you need.
-  4. You must have an USB Bluetooth dongle available. Plugin in it into an available USB port.
-  5. Install the FreeBT driver as described in the BLUETOOTH USB DRIVER INSTALLATION section.
-  6. Install the Microsoft Remote Tools Framework 1.00 <http://www.microsoft.com/downloads/details.aspx?FamilyID=35e9ef0f-833f-4987-9d1f-157a0a6a76e4&DisplayLang=en>.
+  1. Установите Visual Studio 2005 или 2008 и последние пакеты обновлений. Ваша Visual Studio инсталяция должна включать Smart Device Programmability функциональность.
+  2. Установите Microsoft Device Emulator. У вас уже может быть он установлен вместе с Visual Studio инсталяцией. Обновите его до Microsoft Device Emulator 3.0 -- Standalone Release <http://www.microsoft.com/downloads/details.aspx?familyid=A6F6ADAF-12E3-4B2F-A394-356E2C2FB114&displaylang=en>.
+  3. Установите образы ОС, которые вам нужны.
+  4. У вас должно быть свободное Bluetooth USB устройство. Воткните его в свободный USB порт.
+  5. Установите FreeBT USB драйвер как описано в секции. УСТАНОВКА BLUETOOTH USB ДРАЙВЕРА.
+  6. Установите Remote Tools Framework 1.00 <http://www.microsoft.com/downloads/details.aspx?FamilyID=35e9ef0f-833f-4987-9d1f-157a0a6a76e4&DisplayLang=en>.
 
 
 НАЧАЛО РАБОТЫ
 =============
 
-  1. Install the FreeBT USB Driver as described in the BLUETOOTH USB DRIVER INSTALLATION section.
-  2. Install all REQUIREMENTS section as described in the INSTALLATION section.
-  3. Launch the Remote Tools Framework plugin BthEmulManager.cetool from "RTFx Plugin" folder.
-  4. Select an emulator image from the list.
-  5. Wait for the emulator to be connected.
-  6. Select "Bluetooth for Microsoft Device Emulator" node.
-  7. If you have a Bluetooth device attached succesfully then the Bluetooth device info (Address, Manufacturer,   HCI Version, LMP Version) will be displayed. Bluetooth should now be operational in your emulator. An error code with the description will be displayed otherwise.
+  1. Установите FreeBT USB драйвер как описано в секции УСТАНОВКА BLUETOOTH USB ДРАЙВЕРА.
+  2. Установите ВСЕ из секции ТРЕБОВАНИЯ как описано в секции УСТАНОВКА.
+  3. Запустите Remote Tools Framework плагин BthEmulManager.cetool из папки "RTFx Plugin".
+  4. Выберите нужный образ ОС из списка.
+  5. подождите пока эмулятор будет запущен.
+  6. Выберите "Bluetooth for Microsoft Device Emulator" узел в дереве.
+  7. Если Bluetooth устройство было соединено успешно тогда информация о Bluetooth устройстве (Адрес, Производитель, HCI Версия, LMP Версия) будет отображена. Bluetooth теперь должен быть работоспособным на эмуляторе. В противном случае будет отображен код ошибки и ее описание.
   8. To clear the communication log click the right mouse button and select "Clear All".
   9. To copy current device information to the clipboard select "Bluetooth for Microsoft Device Emulator" node, click the right mouse button and select "Copy to Clipboard". 
   10. To switch off Bluetooth on the emulator click "Connection" menu item and select "Disconnect from ... emulator".

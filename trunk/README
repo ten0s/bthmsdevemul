@@ -56,7 +56,7 @@ The project consists from the followings components:
 HARDWARE
 ========
 
-The FreeBT USB Driver is written in accordance with the Bluetooth USB HCI spec. Any device that follows the recommendations set down in that spec should be compatible with the FreeBT driver.
+The FreeBT USB Driver is written in accordance with the Bluetooth USB HCI spec. Any device that follows the recommendations set down in that spec should be compatible with the FreeBT USB driver.
 
 The fbtusb.inf will, by default, install any USB dongle that identifies itself with Class 0xE0 (Wireless Controller), SubClass 0x01 (RF Controller) and Protocol 0x01 (Bluetooth programming), in accordance with the USB HCI spec.
 
@@ -90,11 +90,11 @@ Please refer to FreeBT documentation for more details.
 INSTALLATION
 ============
 
-  1. Install the Visual Studio 2005 or 2008 with the latest service packs. Your Visual Studio installation should include the Smart Device    Programmability.
+  1. Install the Visual Studio 2005 or 2008 with the latest service packs. Your Visual Studio installation should include the Smart Device Programmability feature.
   2. Install the Microsoft Device Emulator. You should have already installed one along with the VS installation. Update it to the Microsoft Device Emulator 3.0 -- Standalone Release <http://www.microsoft.com/downloads/details.aspx?familyid=A6F6ADAF-12E3-4B2F-A394-356E2C2FB114&displaylang=en>.
   3. Install emulator images you need.
   4. You must have an USB Bluetooth dongle available. Plugin in it into an available USB port.
-  5. Install the FreeBT driver as described in the BLUETOOTH USB DRIVER INSTALLATION section.
+  5. Install the FreeBT USB driver as described in the BLUETOOTH USB DRIVER INSTALLATION section.
   6. Install the Microsoft Remote Tools Framework 1.00 <http://www.microsoft.com/downloads/details.aspx?FamilyID=35e9ef0f-833f-4987-9d1f-157a0a6a76e4&DisplayLang=en>.
 
 
@@ -107,7 +107,7 @@ GETTING STARTED
   4. Select an emulator image from the list.
   5. Wait for the emulator to be connected.
   6. Select "Bluetooth for Microsoft Device Emulator" node.
-  7. If you have a Bluetooth device attached succesfully then the Bluetooth device info (Address, Manufacturer,   HCI Version, LMP Version) will be displayed. Bluetooth should now be operational in your emulator. An error code with the description will be displayed otherwise.
+  7. If you have a Bluetooth device attached succesfully then the Bluetooth device info (Address, Manufacturer, HCI Version, LMP Version) will be displayed. Bluetooth should now be operational in your emulator. An error code with the description will be displayed otherwise.
   8. To clear the communication log click the right mouse button and select "Clear All".
   9. To copy current device information to the clipboard select "Bluetooth for Microsoft Device Emulator" node, click the right mouse button and select "Copy to Clipboard". 
   10. To switch off Bluetooth on the emulator click "Connection" menu item and select "Disconnect from ... emulator".
