@@ -24,7 +24,7 @@ Also you should have an available Bluetooth USB dongle.
 
 = NOTE =
 
-This version of Bluetooth for Microsoft Device Emulator uses [http://freebt.net/ FreeBT] project  to access the Bluetooth USB dongle.
+This version of Bluetooth for Microsoft Device Emulator uses [http://freebt.net/ FreeBT] project to access the Bluetooth USB dongle.
 
 = ARCHITECTURE OVERVIEW =
 
