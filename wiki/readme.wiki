@@ -44,7 +44,7 @@ http://bthmsdevemul.googlecode.com/svn/trunk/site/images/architecture.png
 = HARDWARE =
 
 The FreeBT USB Driver is written in accordance with the  Bluetooth USB HCI spec. Any device that follows
-the recommendations set down in that spec should be compatible with the FreeBT driver.
+the recommendations set down in that spec should be compatible with the FreeBT USB driver.
 
 The fbtusb.inf will, by default, install any USB dongle that identifies itself with Class 0xE0 (Wireless Controller),
 SubClass 0x01 (RF Controller) and Protocol 0x01 (Bluetooth programming), in accordance with the USB HCI spec.
@@ -77,11 +77,11 @@ Please refer to FreeBT documentation for more details.
 
 = INSTALLATION =
 
-  # Install the Visual Studio 2005 or 2008 with the latest service packs. Your Visual Studio installation should include the Smart Device Programmability.
+  # Install the Visual Studio 2005 or 2008 with the latest service packs. Your Visual Studio installation should include the Smart Device Programmability feature.
   # Install the Microsoft Device Emulator. You should have already installed one along with the VS installation. Update it to the [http://www.microsoft.com/downloads/details.aspx?familyid=A6F6ADAF-12E3-4B2F-A394-356E2C2FB114&displaylang=en Microsoft Device Emulator 3.0 -- Standalone Release].
   # Install emulator images you need.
   # You must have an USB Bluetooth dongle available. Plugin in it into an available USB port.
-  # Install the FreeBT driver as described in the BLUETOOTH USB DRIVER INSTALLATION section.
+  # Install the FreeBT USB driver as described in the BLUETOOTH USB DRIVER INSTALLATION section.
   # Install the [http://www.microsoft.com/downloads/details.aspx?FamilyID=35e9ef0f-833f-4987-9d1f-157a0a6a76e4&DisplayLang=en Microsoft Remote Tools Framework 1.00].
 
 = GETTING STARTED =
