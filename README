@@ -77,7 +77,7 @@ BLUETOOTH USB DRIVER INSTALLATION
   3. Click the right mouse button and select "Update Driver..." in the popup-menu.
   4. Select "No, not this time" and click "Next >".
   5. Select "Install from a list or specific location" and click "Next >".
-  6. Select "Don’t search. I will choose the driver to install" and click "Next >".
+  6. Select "Don't search. I will choose the driver to install" and click "Next >".
   7. Select the device driver and click the "Have Disk...".
   8. In the Locate File dialog, browse to fbtusb.inf file and click "Next >".
   9. When a "Hardware Installation warning" appears, click "Continue Anyway".
