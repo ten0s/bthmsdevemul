@@ -103,17 +103,17 @@ Please refer to FreeBT documentation for more details.
 
 = TROUBLESHOOTING =
 
-Q. I've installed the Free BT Driver, but after deploying the emulator, it is still not working.<br>
+Q. I've installed the FreeBT USB Driver but after deploying the emulator Bluetooth is still not working.<br>
 A. Install the Microsoft Remote Tools Framework 1.00 if you haven't done it yet. Launch the Remote Tools Framework plugin {{{BthEmulManager.cetool}}} from "RTFx Plugin" folder.
 
 
-Q. I'm trying to connecter Pocket PC 2003 SE Emulator but I receive an error all the time: "The device Pocket PC 2003 SE VGA Emulator has a CPU type of ARMV4 and an operating system version of 4.21."<br>
+Q. I'm trying to connect Pocket PC 2003 SE Emulator but I receive an error all the time: "The device Pocket PC 2003 SE VGA Emulator has a CPU type of ARMV4 and an operating system version of 4.21."<br>
 A. Pocket PC 2003 and Smartphone 2003 aren't supported yet.
 
 
 Q. Which Windows Device Manager the README refers to ?<br>
-A. Win2K&XP: Control Panel -> System -> Hardware tab -> Device Manager
-<br>Vista: Control Panel -> Hardware and Sound -> Device Manager
+A. Win2K&XP: Start -> Settings -> Control Panel -> System -> Hardware tab -> Device Manager
+<br>Vista: Start -> Settings -> Control Panel -> Hardware and Sound -> Device Manager
 
 
 Q. I have started the {{{BthEmulManager.cetool}}} plugin for the first time but nothinng happens. There isn't Bluetooth in the emulator.<br>
@@ -127,6 +127,8 @@ There are a number of reports saying it has problems. The problems with this dri
 
 But the driver works quite stable for me at least. I encourage you if you have such problems and have experience in the Windows driver development
 try to improve the driver and share your results.
+
+If something gone wrong after a while with the driver start the Device Manager, select the problem FreeBT USb Driver from the USB device list, click the right mouse button and select "Disable" in the popup-menu. After that click the right mouse button again and select "Enable" in the popup-menu.
 
 
 = THANKS =
