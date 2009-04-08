@@ -5,6 +5,7 @@
 Bluetooth for Microsoft Device Emulator enables Bluetooth communication from and to the emulator.
 
 Bluetooth connectivity with the Microsoft Device Emulator has been tested with the following SDKs images:
+
   * Windows Mobile 5.0 Pocket PC SDK
   * Windows Mobile 5.0 Smartphone SDK
   * Windows Mobile 6 Professional SDK
