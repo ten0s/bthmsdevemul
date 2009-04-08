@@ -26,7 +26,7 @@ Bluetooth был проверен со следующими образами о�
   * Windows XP или Windows Vista 32-bit с последними пакетами обновлений.
   * Microsoft Visual Studio 2005 или 2008 с последними пакетами обновлений. Ваша Visual Studio инсталяция должна включать Smart Device Programmability функциональность.
   * Windows Mobile 5.0 Pocket PC SDK и/или Windows Mobile 5.0 Smartphone SDK и/или Windows Mobile 6 Professional SDK и/или Windows Mobile 6 Standard SDK образы ОС
-  * Microsoft Device Emulator (Рекомендавана: Версия 3.0).
+  * Microsoft Device Emulator (Рекомендована: Версия 3.0).
   * Microsoft Remote Tools Framework 1.00. 
 
 Также у вас должно быть свободное Bluetooth USB устройство.
@@ -76,15 +76,15 @@ FreeBT USB драйвер быть протестирован со следую�
   2. В Диспетчере устройств выберите Bluetooth устройство, которое должно быть использовано как FreeBT USB.
   3. Нажмите правую кнопку мыши и выберите "Обновить драйвер..." из всплывающего меню.
   4. Выберите "Нет, не в этот раз" и нажмите "Далее >".
-  5. Выберите "Install from a list or specific location" and click "Далее >".
-  6. Выберите "Don’t search. I will choose the driver to install" and click "Далее >".
-  7. Выберите the device driver and click the "Have Disk...".
-  8. In the Locate File dialog, browse to fbtusb.inf file and click "Далее >".
-  9. When a "Hardware Installation warning" appears, click "Continue Anyway".
-  10. когда установка будет закончена, нажмите "Finish".
-  11. В списке USB устройств теперь должно быть добавлено "FreeBT USB Driver". 
+  5. Выберите "Установка из указанного места" и нажмите "Далее >".
+  6. Выберите "Не выполнять поиск. Я сам выберу нужный драйвер" и нажмите "Далее >".
+  7. Нажмите "Установить с диска...".
+  8. Укажите расположение файла fbtusb.inf и нажмите "Далее >".
+  9. При появление предупреждения о несовместимости выберите "Все равно продолжить".
+  10. Когда установка будет закончена, нажмите "Готово".
+  11. В списке USB устройств должен появиться "FreeBT USB Driver". 
 
-Обращайтесь к FreeBT документации для получения более подробной информации.
+Обратитесь к документации проекта FreeBT для получения более подробной информации.
 
 
 УСТАНОВКА
@@ -93,7 +93,7 @@ FreeBT USB драйвер быть протестирован со следую�
   1. Установите Visual Studio 2005 или 2008 и последние пакеты обновлений. Ваша Visual Studio инсталяция должна включать Smart Device Programmability функциональность.
   2. Установите Microsoft Device Emulator. У вас уже может быть он установлен вместе с Visual Studio инсталяцией. Обновите его до Microsoft Device Emulator 3.0 -- Standalone Release <http://www.microsoft.com/downloads/details.aspx?familyid=A6F6ADAF-12E3-4B2F-A394-356E2C2FB114&displaylang=en>.
   3. Установите образы ОС, которые вам нужны.
-  4. У вас должно быть свободное Bluetooth USB устройство. Воткните его в свободный USB порт.
+  4. У вас должно быть свободное Bluetooth USB устройство. Установите его в свободный USB порт.
   5. Установите FreeBT USB драйвер как описано в секции. УСТАНОВКА BLUETOOTH USB ДРАЙВЕРА.
   6. Установите Remote Tools Framework 1.00 <http://www.microsoft.com/downloads/details.aspx?FamilyID=35e9ef0f-833f-4987-9d1f-157a0a6a76e4&DisplayLang=en>.
 
@@ -108,38 +108,41 @@ FreeBT USB драйвер быть протестирован со следую�
   5. подождите пока эмулятор будет запущен.
   6. Выберите "Bluetooth for Microsoft Device Emulator" узел в дереве.
   7. Если Bluetooth устройство было соединено успешно тогда информация о Bluetooth устройстве (Адрес, Производитель, HCI Версия, LMP Версия) будет отображена. Bluetooth теперь должен быть работоспособным на эмуляторе. В противном случае будет отображен код ошибки и ее описание.
-  8. To clear the communication log click the right mouse button and select "Clear All".
-  9. To copy current device information to the clipboard select "Bluetooth for Microsoft Device Emulator" node, click the right mouse button and select "Copy to Clipboard". 
-  10. To switch off Bluetooth on the emulator click "Connection" menu item and select "Disconnect from ... emulator".
-  11. Microsoft Remote Tools Framework allows you to start two device emulators at the same time. If you have installed two or more FreeBT USB devices click "Windows" menu item and select "Split Windows View". Repeat steps 3-6. You will get two Bluetooth powered emulators are running simultaneously.
-  12. It is possible to enable/disable device side logging. If you enable "Device Logging" checkbox then remote logging will be enabled on the emulator. Have a look at \\Temp directory on the emulator. There should be created btd_bthemul_0.txt, btd_BthEmulAgent_0.txt, btd_bthemulcom_0.txt files. 
-  13. It is possible to enable/disable desktop side logging. If you enable "Desktop Logging" checkbox then local logging will be enabled. Have a look at your installation directory. There should be created BthEmulManager.txt file. 
-  14. It is possible to enable/disable communication logging. Communication logging allows to see communication activities between the emulator and the Bluetooth device.
+  8. Чтобы очистить журнал обмена данными нажмите правую кнопку мыши и выберите "Clear All".
+  9. Чтобы скопировать текущую информацию об устройстве в буфер обмена выделите "Bluetooth for Microsoft Device Emulator" узел в дереве, нажмите правую кнопку мыши и выберите "Copy to Clipboard". 
+  10. Чтобы выключить Bluetooth в эмуляторе откройте меню "Connection" и выберите "Disconnect from ... emulator".
+  11. Microsoft Remote Tools Framework позволяет запустить два эмулятора одновременно. Если у вас установлено два или более
+FreeBT USB устройства откройте меню "Windows" и выберите "Split Windows View". Повторите шаги с 3 по 6. Вы получите два эмулятора в поддержкой Bluetooth работающих одновременно.
+  12. Возможно включить/отключить логирование на стороне эмулятора. Если установлен флаг "Device Logging", то удаленное логирование будет включено на эмуляторе. Посмотрите в папку \\Temp на эмуляторе. Там должны быть созданы файлы btd_bthemul_0.txt, btd_BthEmulAgent_0.txt, btd_bthemulcom_0.txt. 
+  13. Возможно включить/отключить логирование на стороне ПК. Если установлен флаг "Desktop Logging", то логирование на ПК будет включено. Посмотрите в папку установки проекта. Там должен быть создан BthEmulManager.txt файл. 
+  14. Возможно включить/отключить логирование обмена данными. Логирование обмена данными позволяет увидеть передачу данных между эмулятором и Bluetooth устройством.
 
 
 РЕШЕНИЕ ПРОБЛЕМ
 ===============
 
-  Q. I've installed the Free BT Driver, but after deploying the emulator, it is still not working.
-  A. Install the Microsoft Remote Tools Framework 1.00 if you haven't done it yet. Launch the Remote Tools Framework plugin BthEmulManager.cetool from "RTFx Plugin" folder.
+  В. Я установил FreeBT USB Driver, но после запуска эмуляторе Bluetooth все еще не работает.
+  О. Установите Microsoft Remote Tools Framework 1.00 если вы еще этого не сделали. Запустите Remote Tools Framework плагин BthEmulManager.cetool из папки "RTFx Plugin".
   
-  Q. I'm trying to connecter Pocket PC 2003 SE Emulator but I receive an error all the time: "The device Pocket PC 2003 SE VGA Emulator has a CPU type of ARMV4 and an operating system version of 4.21."
-  A. Pocket PC 2003 and Smartphone 2003 aren't supported yet.
+  В. Я пытаюсь запустить Pocket PC 2003 SE Emulator, но все время получаю ошибку: "The device Pocket PC 2003 SE VGA Emulator has a CPU type of ARMV4 and an operating system version of 4.21."
+  О. Pocket PC 2003 и Smartphone 2003 в настоящий момент не поддерживаются.
 
-  Q. Which Windows Device Manager the README refers to ?
-  A. Win2K&XP: Control Panel -> System -> Hardware tab -> Device Manager
-     Vista: Control Panel -> Hardware and Sound -> Device Manager
+  В. О каком Диспетчере устройств говорится в файле README ?
+  О. Win2K&XP: Пуск -> Настройка -> Панель управления -> Система -> Оборудование -> Диспетчер устройств
+     Vista: Пуск -> Настройка -> Панель управления -> Оборудование и звук -> Диспетчер устройств
 
-  Q. I have started the BthEmulManager.cetool plugin for the first time but nothinng happens. There isn't Bluetooth in the emulator.
-  A. Try to restart the plugin for the previously choosen emulator. Also go to Settings -> Connections -> Bluetooth -> Mode tab and turn on Bluetooth.
+  В. Я запустил BthEmulManager.cetool плагин в первый раз, но ничего не происходит. В эмуляторе нет Bluetooth.
+  О. Попробуйте перезапустить плагин для того же самого образа эмулятора. Также на эмуляторе Settings -> Connections -> Bluetooth -> Mode tab и включите Bluetooth.
 
-You may also have problems with the FreeBT USB Driver itself. The driver is still (and will probably remain at this stage) in alpha version. There are a number of reports saying it has problems. The problems with this driver are the following:
+Также вполне возможны проблемы с самим FreeBT USB драйвером. Драйвер все еще в (и наверное останется на этой стадии) в альфа версии. Существует ряд проблем с ним:
 
-  1. It stops working for no reason.
-  2. It may miss packets in write/read operations. The problems start when you send large packets very fast. The most probably the problem in an incorrect using HCI buffers (Read Buffer Size Command, Number Of Completed Packets Event).
-  3. It isn't stable with some chipset like CSR.
+  1. Драйвер может прекратить корректную работу без видимых причин.
+  2. Драйвер может терять пакеты при операциях чтения/записи. Проблемы начинаются когда вы пытаетесь посылать большие блоки данных очень быстро. Скорее всего проблема в некорректном использовании HCI буферов (Read Buffer Size Command, Number Of Completed Packets Event).
+  3. Драйвер не стабилен на некоторых чипсетах типа CSR.
 
-But the driver works quite stable for me at least. I encourage you if you have such problems and have experience in the Windows driver development try to improve the driver and share your results.
+Но этот драйвер работает вполне стабильно для меня по крайней мере. Если же вы имеете опыт в разработке драйверов под Windows и испытываете выше перечисленные проблемы попробуйте улучшить драйвер и поделитесь результатами.
+
+Если все же спустя время драйвер перестал вести себя адекватно, зайдите в Диспетчер устройств, выделите FreeBT USb Driver из списка USB устройств, нажмите правую кнопку мыши и выберите "Отключить" из всплывающего меню. После чего опять же нажмите правую кнопку мыши и выберите "Включить" из всплывающего меню.
 
 
 БЛАГОДАРНОСТИ
