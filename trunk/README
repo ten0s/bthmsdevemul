@@ -41,7 +41,7 @@ This version of Bluetooth for Microsoft Device Emulator uses FreeBT project <htt
 ARCHITECTURE OVERVIEW
 =====================
 
-The project consists from the followings components: 
+The project consists of the followings components: 
   1. Device side 
     * Bluetooth HCI Transport Driver <http://msdn.microsoft.com/en-us/library/ms890918.aspx>.
     * Serial Port Driver <http://msdn.microsoft.com/en-us/library/ms923741.aspx> to abstract the transport driver from  knowing means of communication.
