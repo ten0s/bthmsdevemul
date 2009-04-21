@@ -118,7 +118,7 @@ A. Win2K&XP: Start -> Settings -> Control Panel -> System -> Hardware tab -> Dev
 
 
 Q. I have started the {{{BthEmulManager.cetool}}} plugin for the first time but nothinng happens. There isn't Bluetooth in the emulator.<br>
-A. Try to restart the plugin for the previously choosen emulator. Also go to Settings -> Connections -> Bluetooth -> Mode tab and turn on Bluetooth.
+A. Try to restart the plugin for the previously chosen emulator. Also go to Settings -> Connections -> Bluetooth -> Mode tab and turn on Bluetooth.
 
 You may also have problems with the FreeBT USB Driver itself. The driver is still (and will probably remain at this stage) in alpha version. 
 There are a number of reports saying it has problems. The problems with this driver are the following:
