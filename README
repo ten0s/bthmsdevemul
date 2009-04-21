@@ -29,7 +29,7 @@ Please notice that you MUST have installed ALL the following:
   * Microsoft Device Emulator (Recommended: Version 3.0).
   * Microsoft Remote Tools Framework 1.00. 
 
-Also you should have an available Bluetooth USB dongle.
+Also you should have available a Bluetooth USB dongle.
 
 
 NOTE
@@ -136,12 +136,12 @@ TROUBLESHOOTING
 You may also have problems with the FreeBT USB Driver itself. The driver is still (and will probably remain at this stage) in alpha version. There are a number of reports saying it has problems. The problems with this driver are the following:
 
   1. It stops working for no reason.
-  2. It may miss packets in write/read operations. The problems start when you send large packets very fast. The most probably the problem in an incorrect using HCI buffers (Read Buffer Size Command, Number Of Completed Packets Event).
+  2. It may miss packets in write/read operations. The problems start when you send large packets very fast. The most probably the problem in an incorrect using of HCI buffers (Read Buffer Size Command, Number Of Completed Packets Event).
   3. It isn't stable with some chipset like CSR.
 
 But the driver works quite stable for me at least. I encourage you if you have such problems and have experience in the Windows driver development try to improve the driver and share your results.
 
-If something gone wrong after a while with the driver start the Device Manager, select the problem FreeBT USb Driver from the USB device list, click the right mouse button and select "Disable" in the popup-menu. After that click the right mouse button again and select "Enable" in the popup-menu.
+If something gone wrong after a while with the driver start the Device Manager, select the problem FreeBT USB Driver from the USB device list, click the right mouse button and select "Disable" in the popup-menu. After that click the right mouse button again and select "Enable" in the popup-menu.
 
 
 THANKS
