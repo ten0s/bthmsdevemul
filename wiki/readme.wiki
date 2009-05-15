@@ -15,8 +15,8 @@ Bluetooth connectivity with the Microsoft Device Emulator has been tested with t
 
 Please notice that you MUST have installed ALL the following:
 
-  * Windows XP or Windows Vista 32-bit with the lastest service packs.
-  * Microsoft Visual Studio 2005 or 2008 with the lastest service packs. You Visual Studio installation must include the Smart Device Programmability feature.
+  * Windows XP or Windows Vista 32-bit with the latest service packs.
+  * Microsoft Visual Studio 2005 or 2008 with the latest service packs. You Visual Studio installation must include the Smart Device Programmability feature.
   * Windows Mobile 5.0 Pocket PC SDK and/or Windows Mobile 5.0 Smartphone SDK and/or Windows Mobile 6 Professional SDK and/or Windows Mobile 6 Standard SDK emulator images
   * [http://www.microsoft.com/downloads/details.aspx?familyid=A6F6ADAF-12E3-4B2F-A394-356E2C2FB114&displaylang=en Microsoft Device Emulator (Recommended: Version 3.0)].
   * [http://www.microsoft.com/downloads/details.aspx?FamilyID=35e9ef0f-833f-4987-9d1f-157a0a6a76e4&DisplayLang=en Microsoft Remote Tools Framework 1.00].
