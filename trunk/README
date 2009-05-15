@@ -23,8 +23,8 @@ REQUIREMENTS
 
 Please notice that you MUST have installed ALL the following:
 
-  * Windows XP or Windows Vista 32-bit with the lastest service packs.
-  * Microsoft Visual Studio 2005 or 2008 with the lastest service packs. You Visual Studio installation must include the Smart Device Programmability feature.
+  * Windows XP or Windows Vista 32-bit with the latest service packs.
+  * Microsoft Visual Studio 2005 or 2008 with the latest service packs. You Visual Studio installation must include the Smart Device Programmability feature.
   * Windows Mobile 5.0 Pocket PC SDK and/or Windows Mobile 5.0 Smartphone SDK and/or Windows Mobile 6 Professional SDK and/or Windows Mobile 6 Standard SDK emulator images
   * Microsoft Device Emulator (Recommended: Version 3.0).
   * Microsoft Remote Tools Framework 1.00. 
