@@ -71,6 +71,7 @@ DWORD WINAPI WatchDogThread( LPVOID lpParam );
 
 HANDLE g_hQuitEvent = NULL;
 HANDLE g_hDevice = NULL;
+HANDLE g_hWorkingThread = NULL;
 
 LONG g_lIncomeMsgCounter = 0;
 LONG g_lOutcomeMsgCounter = 0;
@@ -100,16 +101,6 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLi
 
    if ( !g_hQuitEvent ) {
       nRet = ERROR_CREATE_EVENT;
-      IFDBG( DebugOut( DEBUG_OUTPUT, L"-WinMain ret: %d GetLastError: 0x%08x\n", nRet, GetLastError() ) );
-      return nRet;
-   }
-
-   // create working thread.
-   HANDLE hWorkingThread = CreateThread( NULL, 0, WorkingThread, NULL, 0, NULL );
-   ASSERT( hWorkingThread );
-
-   if ( !hWorkingThread ) {
-      nRet = ERROR_CREATE_WORKING_THREAD;
       IFDBG( DebugOut( DEBUG_OUTPUT, L"-WinMain ret: %d GetLastError: 0x%08x\n", nRet, GetLastError() ) );
       return nRet;
    }
@@ -151,11 +142,11 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLi
    // uninitialize agent.
    Uninitialize();
 
-   if ( hWorkingThread ) {
+   if ( g_hWorkingThread ) {
       PulseEvent( g_hQuitEvent );
-      WaitForSingleObject( hWorkingThread, MSG_QUEUE_READ_TIMEOUT + MSG_QUEUE_WRITE_TIMEOUT );
-      CloseHandle( hWorkingThread );
-      hWorkingThread = NULL;
+      WaitForSingleObject( g_hWorkingThread, INFINITE );
+      CloseHandle( g_hWorkingThread );
+      g_hWorkingThread = NULL;
    }
 
    if ( g_hQuitEvent ) {
@@ -263,7 +254,7 @@ void ReadDeviceWriteDesktop()
 
       DWORD dwReaded = 0;
       DWORD dwFlags = 0;          
-      BOOL bRet = ReadMsgQueue( g_hReadQueue, buffer, MSG_BUFFER_SIZE, &dwReaded, MSG_QUEUE_READ_TIMEOUT, &dwFlags );
+      BOOL bRet = ReadMsgQueue( g_hReadQueue, buffer, MSG_BUFFER_SIZE, &dwReaded, 0/*MSG_QUEUE_READ_TIMEOUT*/, &dwFlags );
       if ( bRet ) {
          TRACE0( "Readed packet from device" );
          IFDBG( DebugOut( DEBUG_OUTPUT, L"Data from device:\n" ) );
@@ -427,7 +418,7 @@ HRESULT STDAPICALLTYPE CommandCallback( DWORD dwCmd, const CCommandPacket* pCmdD
 }
 
 /**
-@func DWORD | WorkingThread | A main working thread, used to read data from the desktop.
+@func DWORD | WorkingThread | A main working thread, used to read data from the message queue and writes them to the desktop.
 @parm LPVOID | lpParam | Thread data passed to the function using the lpParameter parameter of the CreateThread function. 
 @rdesc The function should return a value that indicates its success or failure. 
 */
@@ -436,9 +427,27 @@ DWORD WINAPI WorkingThread( LPVOID lpParam )
    IFDBG( DebugOut( DEBUG_OUTPUT, L"+WorkingThread\n" ) );
 
    DWORD dwRes = 0;
+   HANDLE handles[] = { g_hQuitEvent, g_hReadQueue };
 
-   while ( WAIT_OBJECT_0 != WaitForSingleObject( g_hQuitEvent, WORKING_THREAD_SLEEP_TIMEOUT ) ) {
+   DWORD dwWait = WAIT_FAILED;
+   for (;;) {
+      dwWait = WaitForMultipleObjects( sizeof( handles )/sizeof( handles[0] ), handles, FALSE, INFINITE );
+      if ( WAIT_OBJECT_0 == dwWait ) {
+         // exit the loop...
+         break;
+      } else if ( WAIT_OBJECT_0 + 1 == dwWait ) {
+         // data available...
       ReadDeviceWriteDesktop();
+      } else if (WAIT_TIMEOUT == dwWait ) {
+         // this one should never been called.
+         TRACE0( "WaitForMultipleObjects ret: WAIT_TIMEOUT" );
+         IFDBG( DebugOut( DEBUG_OUTPUT, L"WaitForMultipleObjects ret: WAIT_TIMEOUT\n" ) );
+      } else {
+         // WAIT_FAILED
+         DWORD dwError = GetLastError();
+         TRACE1( "WaitForMultipleObjects ret: 0x%08x", dwError );
+         IFDBG( DebugOut( DEBUG_OUTPUT, L"WaitForMultipleObjects ret: 0x%08x\n", dwError ) );
+      }
     }
 
    IFDBG( DebugOut( DEBUG_OUTPUT, L"-WorkingThread ret: %lu\n", dwRes ) ); 
@@ -752,7 +761,15 @@ BOOL Initialize()
             ASSERT( bRet );
 
             if ( bRet ) {
-               // do nothing...
+               // create working thread.
+               g_hWorkingThread = CreateThread( NULL, 0, WorkingThread, NULL, 0, NULL );
+               ASSERT( g_hWorkingThread );
+
+               if ( !g_hWorkingThread ) {
+                  nRet = ERROR_CREATE_WORKING_THREAD;
+                  IFDBG( DebugOut( DEBUG_OUTPUT, L"CreateThread GetLastError: 0x%08x\n", GetLastError() ) );
+                  return nRet;
+               }
             } else {
                nRet = ERROR_ACTIVATE_DRIVER;
             }

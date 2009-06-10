@@ -143,7 +143,7 @@
     <value>http://code.google.com/p/bthmsdevemul/</value>
   </data>
 	<data name="VersionNumber" xml:space="preserve">
-    <value>v.0.9.4</value>
+    <value>v.0.9.5</value>
   </data>
 	<data name="AttachHardware" xml:space="preserve">
     <value>Attach hardware</value>

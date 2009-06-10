@@ -94,7 +94,7 @@ namespace BthEmul.View
         /// </remarks>
         protected override void OnPopulateControls(object hint)
         {
-            ControlPanelData data = (ControlPanelData)this.Data;
+            ControlPanelData data = (ControlPanelData)Data;
             
             System.Drawing.Bitmap image = Resources.bluetooth_disabled_72x72;
             string state = Resources.HardwareDetached;
@@ -120,15 +120,22 @@ namespace BthEmul.View
             cbDesktopLogging.Checked = data.DesktopLogging;
             cbCommLogging.Checked = data.CommLogging;
 
-            int index = this.lbCommLog.SelectedIndex;
-            bool lastIndex = (index == lbCommLog.Items.Count - 1);
-            lbCommLog.Items.Clear();
-
-            for (int i = 0; i < data.CommLog.Count; ++i)
+            if (data.CommLogging)
             {
-                lbCommLog.Items.Add(data.CommLog[i]);
+                int index = lbCommLog.SelectedIndex;
+                bool lastIndex = (index == lbCommLog.Items.Count - 1);
+                lbCommLog.Items.Clear();
+
+                for (int i = 0; i < data.CommLog.Count; ++i)
+                {
+                    lbCommLog.Items.Add(data.CommLog[i]);
+                }
+                lbCommLog.SelectedIndex = lastIndex ? lbCommLog.Items.Count - 1 : index;
             }
-            lbCommLog.SelectedIndex = lastIndex ? lbCommLog.Items.Count - 1 : index;
+            else
+            {
+                lbCommLog.Items.Clear();
+            }
         }
 
         private void InitializeComponent()
@@ -371,22 +378,22 @@ namespace BthEmul.View
 
         void cbDeviceLogging_CheckedChanged(object sender, EventArgs e)
         {
-            ((ControlPanelData)this.Data).DeviceLogging = cbDeviceLogging.Checked;
+            ((ControlPanelData)Data).DeviceLogging = cbDeviceLogging.Checked;
         }
 
         private void cbDesktopLogging_CheckedChanged(object sender, EventArgs e)
         {
-            ((ControlPanelData)this.Data).DesktopLogging = cbDesktopLogging.Checked;
+            ((ControlPanelData)Data).DesktopLogging = cbDesktopLogging.Checked;
         }
 
         private void cbCommLogging_CheckedChanged(object sender, EventArgs e)
         {
-            ((ControlPanelData)this.Data).CommLogging = cbCommLogging.Checked;
+            ((ControlPanelData)Data).CommLogging = cbCommLogging.Checked;
         }
 
         private void miClearAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ControlPanelData data = (ControlPanelData)this.Data;
+            ControlPanelData data = (ControlPanelData)Data;
             data.ClearCommLog();            
         }
 

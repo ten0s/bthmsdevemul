@@ -1,4 +1,4 @@
 1. BthSetMode BTH_POWER_OFF
-2. Automatically reduce log when becomes to big.
-3. Support WinCE 4.2 (anyone needs this ???)
+2. Correct command/event order
+3. Automatically reduce log when becomes to big.
 4. Pass Microsoft Bluetooth Test (changes in FreeBT USB Driver are needed)

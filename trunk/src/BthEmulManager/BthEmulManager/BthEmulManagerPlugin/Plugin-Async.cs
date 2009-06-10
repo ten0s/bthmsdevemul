@@ -60,9 +60,8 @@ namespace BthEmul
         /// </summary>
         private ControlPanelView ctrlPanelView = null;
 
-        private int devId = 0;
-        private bool hardwareAvailable = false;
-
+        private int devId = BthRuntime.INVALID_DEVICE_ID;
+        
         /// <summary>
         /// Constructor for this object. You can set some attributes here.
         /// </summary>
@@ -72,7 +71,7 @@ namespace BthEmul
         {
             
         }      
-  
+
         /// <summary>
         /// Called by the Remote Tools Framework at load-time for the plugin.
         /// You need to define the node structure and create your data objects here.
@@ -80,23 +79,23 @@ namespace BthEmul
         protected override void OnInit()
         {
             // build data objects.
-            this.ctrlPanelData = new ControlPanelData(this, this.guidTopLevelNode);
-            this.ctrlPanelData.DeviceLoggingChanged += new LoggingChangedEventHandler(controlPanelData_DeviceLoggingChanged);
-            this.ctrlPanelData.DesktopLoggingChanged += new LoggingChangedEventHandler(controlPanelData_DesktopLoggingChanged);
-            this.ctrlPanelData.CommLoggingChanged += new LoggingChangedEventHandler(controlPanelData_CommLoggingChanged);
+            ctrlPanelData = new ControlPanelData(this, guidTopLevelNode);
+            ctrlPanelData.DeviceLoggingChanged += new LoggingChangedEventHandler(controlPanelData_DeviceLoggingChanged);
+            ctrlPanelData.DesktopLoggingChanged += new LoggingChangedEventHandler(controlPanelData_DesktopLoggingChanged);
+            ctrlPanelData.CommLoggingChanged += new LoggingChangedEventHandler(controlPanelData_CommLoggingChanged);            
 
-            AddData(this.ctrlPanelData);
+            AddData(ctrlPanelData);
 
             // build view objects.
-            this.ctrlPanelView = new ControlPanelView(this.ctrlPanelData);
+            ctrlPanelView = new ControlPanelView(ctrlPanelData);
 
             // If the plugin is running "standalone", that means that it does not need
             // to share the TreeView control in the shell with anyone else. It would
             // be redundant to add a top node to identify the plugin (the one with a
             // hammer and wrench).
-            if (this.Standalone)
+            if (Standalone)
             {
-                this.guidTopLevelNode = null;
+                guidTopLevelNode = null;
             }
             else
             {
@@ -105,7 +104,7 @@ namespace BthEmul
                 //
                 // This will add a top level node by setting the guid for the parent to null.
                 // There is no view panel associated with this node.
-                topNode = new PluginNode(this.Title, this.guidTopLevelNode, null, this.ctrlPanelData, this.ctrlPanelView, this, BuiltInIcon.Custom);
+                topNode = new PluginNode(Title, guidTopLevelNode, null, ctrlPanelData, ctrlPanelView, this, BuiltInIcon.Custom);
                 topNode.CustomIcon = Resources.bluetooth_regular;
                 AddNode(topNode);                
             }
@@ -115,47 +114,19 @@ namespace BthEmul
             cmdAbout.Clicked += new EventHandler(cmdAbout_Clicked);
             CommandUI.PluginCommands.Add(cmdAbout);
 
-            // query remote device info.
-            DeviceDatbaseItem item = DeviceDatabase.FindByGuid(DeviceConnection.Guid);
-            this.ctrlPanelData.RemotePlatform = item.Platform;
-            this.ctrlPanelData.RemoteDescription = item.Description;
-            this.ctrlPanelData.RemoteVersion = string.Format("{0}.{1:00}", item.OsMajor, item.OsMinor);
-            this.ctrlPanelData.RemoteCPU = item.CPU;
+            OpenDevice();
+        }
 
-            BthRuntime.SetLogFileName("BthEmulManager.txt");
-            
-            int level = this.ctrlPanelData.DesktopLogging ? 255 : 0;
-            BthRuntime.SetLogLevel(level);
-
-            devId = BthRuntime.OpenDevice();
-            if (-1 == devId)
+        void OpenDevice()
+        {
+            devId = ctrlPanelData.OpenDevice();
+            if (devId != BthRuntime.INVALID_DEVICE_ID)
             {
-                this.ctrlPanelData.HardwareState = HARDWARE_STATE.UNAVAILABLE;
-                
-                int lastError = Marshal.GetLastWin32Error();
-                this.ctrlPanelData.HardwareErrorCode = lastError;
-                this.ctrlPanelData.HardwareErrorMessage = new System.ComponentModel.Win32Exception(lastError).Message;
-                this.topNode.ViewPanel.Refresh();
-                this.ctrlPanelView.Refresh();
-            }
-            else
-            {
-                hardwareAvailable = true;
-                this.ctrlPanelData.HardwareState = HARDWARE_STATE.ATTACHED;
-
-                // get device info.
-                DEVICE_INFO deviceInfo = new DEVICE_INFO();
-                if (1 == BthRuntime.GetDeviceInfo(devId, ref deviceInfo))
-                {
-                    this.ctrlPanelData.DeviceInfo = deviceInfo;
-                    this.ctrlPanelData.Manufacturer = BthRuntime.GetManufacturerName(deviceInfo.manufacturer);
-                }
-
                 // subscribe to hci events.
-                hciEventListener = new BthRuntime.HciEventListenerDelegate(this.OnHciEvent);
+                hciEventListener = new BthRuntime.HciEventListenerDelegate(OnHciEvent);
                 BthRuntime.SubscribeHCIEvent(devId, hciEventListener);
 
-                if(watchDogTimer != null)
+                if (watchDogTimer != null)
                 {
                     watchDogTimer.Stop();
                     watchDogTimer = null;
@@ -166,17 +137,17 @@ namespace BthEmul
                 watchDogTimer.Elapsed += new ElapsedEventHandler(WatchDogTimerEvent);
                 watchDogTimer.Interval = 5000;
                 watchDogTimer.Start();
-            }
+            }            
         }
 
         void controlPanelData_CommLoggingChanged(object sender, EventArgs e)
         {
-            this.ctrlPanelData.ClearCommLog();
+            ctrlPanelData.ClearCommLog();
         }
 
         void controlPanelData_DesktopLoggingChanged(object sender, EventArgs e)
         {
-            int level = this.ctrlPanelData.DesktopLogging ? 255 : 0;
+            int level = ctrlPanelData.DesktopLogging ? 255 : 0;
             BthRuntime.SetLogLevel(level);
         }
 
@@ -193,9 +164,10 @@ namespace BthEmul
 
         private void AddCommLog(string log)
         {
-            if (this.ctrlPanelData.CommLogging)
+            if (ctrlPanelData.CommLogging)
             {
-                this.ctrlPanelData.CommLog.Add(log);
+                ctrlPanelData.CommLog.Add(log);
+                ctrlPanelData.RenderViews(null);
             }            
         }
 
@@ -203,27 +175,29 @@ namespace BthEmul
         {
             CommandPacket cmd = new CommandPacket();
             cmd.CommandId = (uint)PACKET_TYPE.MESSAGE_PACKET;
-            MESSAGE_ID cmdId = this.ctrlPanelData.DeviceLogging ? MESSAGE_ID.AGENT_LOGGING_ON_MSG : MESSAGE_ID.AGENT_LOGGING_OFF_MSG;
+            MESSAGE_ID cmdId = ctrlPanelData.DeviceLogging ? MESSAGE_ID.AGENT_LOGGING_ON_MSG : MESSAGE_ID.AGENT_LOGGING_OFF_MSG;
             cmd.AddParameterDWORD((uint)cmdId);
             SendCommand(cmd);
         }
 
         private void AddCommLog(string packetType, byte[] bytes, int length, string result)
         {
-            if (this.ctrlPanelData.CommLogging)
+            if (ctrlPanelData.CommLogging)
             {
                 string packetData = BytesToHex(bytes, length);
-                AddCommLog(string.Format("{0}: {1} {2}", packetType, packetData, result));                
+                AddCommLog(string.Format(GlobalData.LOG_FORMAT, packetType, packetData, result));
             }
         }
 
         private static string BytesToHex(byte[] bytes, int length)
         {
             StringBuilder hexString = new StringBuilder(length);
-            for (int i = 0; i < length; i++)
+            
+            for (int i = 0; i < length; ++i)
             {
                 hexString.Append(bytes[i].ToString("x2"));
             }
+
             return hexString.ToString();
         }
 
@@ -239,10 +213,7 @@ namespace BthEmul
 
         private void SendHCIEvent(byte[] bytes)
         {
-            string packetType = "EVENT_PACKET";
-            string result = "OK";
-
-            AddCommLog(packetType, bytes, bytes.Length, result);
+            AddCommLog(GlobalData.EVENT_PACKET, bytes, bytes.Length, GlobalData.OK);
 
             // send to device...
             CommandPacket cmd = new CommandPacket();
@@ -255,10 +226,10 @@ namespace BthEmul
         {
             if (CommandTransport != null && 
                 CommandTransport.ConnectionState == CommandTransport.ConnectState.Connected &&
-                hardwareAvailable)
+                BthRuntime.INVALID_DEVICE_ID != devId)
             {
                 // send to device...
-                CommandTransport.ProcessCommand(cmd, this.ctrlPanelData);
+                CommandTransport.ProcessCommand(cmd, ctrlPanelData);
                 return true;
             }
 
@@ -267,11 +238,18 @@ namespace BthEmul
               
         private void WatchDogTimerEvent(object source, ElapsedEventArgs e)
         {
-            // send to device...
-            CommandPacket cmd = new CommandPacket();
-            cmd.CommandId = (uint)PACKET_TYPE.MESSAGE_PACKET;
-            cmd.AddParameterDWORD((uint)MESSAGE_ID.AGENT_PING_MSG);
-            SendCommand(cmd);
+            if (Connected)
+            {
+                // send to device...
+                CommandPacket cmd = new CommandPacket();
+                cmd.CommandId = (uint)PACKET_TYPE.MESSAGE_PACKET;
+                cmd.AddParameterDWORD((uint)MESSAGE_ID.AGENT_PING_MSG);
+                SendCommand(cmd);                
+            }
+            else
+            {
+                ctrlPanelData.CloseDevice();
+            }
         }
 
         private bool OnDeviceDataReceived(byte[] bytes)
@@ -285,7 +263,7 @@ namespace BthEmul
                 int lastError = 0;
                 int ret = BthRuntime.SendHCICommand(devId, bytes, (uint)bytes.Length);
 
-                string result = "OK";
+                string result = GlobalData.OK;
                 if (ret == 0)
                 {
                     lastError = Marshal.GetLastWin32Error();
@@ -312,17 +290,7 @@ namespace BthEmul
             CommandPacket cmd = new CommandPacket();
             cmd.CommandId = (uint)PACKET_TYPE.MESSAGE_PACKET;
             cmd.AddParameterDWORD((uint)MESSAGE_ID.AGENT_ACK_MSG);
-            SendCommand(cmd);            
-        }
-
-        protected override void OnConnectionChanged()
-        {
-            if (!this.Connected )
-            {
-                BthRuntime.CloseDevice(devId);
-                this.ctrlPanelData.HardwareState = HARDWARE_STATE.DETACHED;
-                this.ctrlPanelView.Refresh();
-            }            
+            SendCommand(cmd);
         }
 
         /// <summary>
@@ -396,9 +364,7 @@ namespace BthEmul
                         }
                     }
                     break;               
-            }
-
-            this.ctrlPanelData.RenderViews(null);
-        }
+            }            
+        }        
     }
 }

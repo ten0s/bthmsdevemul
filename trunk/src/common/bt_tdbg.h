@@ -32,11 +32,18 @@ Notes:
 #ifndef _DBGUTIL_H_
 #define _DBGUTIL_H_
 
+#include <regext.h>  // RegistryNotifyCallback, RegistryCloseNotification
+#pragma comment(lib, "aygshell.lib")
+
 #if defined (LOCALDBG)
 #define DECLARE_DEBUG_VARS()	\
 	HANDLE hDebugOutput = INVALID_HANDLE_VALUE;	\
 	int    cDebugOutput = 0;					\
-	CRITICAL_SECTION csDebugOutput;
+	CRITICAL_SECTION csDebugOutput;                                      \
+   HREGNOTIFY hRegNotify = NULL;                                        \
+   LPCTSTR REG_DEBUG_KEY = _T("Software\\Microsoft\\Bluetooth\\Debug"); \
+   LPCTSTR REG_VALUE_KEY = _T("Mask");                                  \
+   DWORD dwDebugLevel = 0x0;
 
 #if ! defined (LOCALDBG_MAX)
 #define LOCALDBG_MAX	OUTPUT_FILE_MAX
@@ -45,6 +52,15 @@ Notes:
 extern HANDLE hDebugOutput;
 extern int    cDebugOutput;
 extern CRITICAL_SECTION csDebugOutput;
+extern HREGNOTIFY hRegNotify;
+extern LPCTSTR REG_DEBUG_KEY;
+extern LPCTSTR REG_VALUE_KEY;
+extern DWORD dwDebugLevel;
+
+// Forward declaration.
+BOOL GetLogLevel( DWORD& dwLevel );
+// Forward declaration the call back function for Registry Notifications.
+void RegistryNotifyCallbackFunc(HREGNOTIFY hNotify, DWORD dwUserData, const PBYTE pData, const UINT cbData);
 
 inline void __DebugOut (unsigned int cMask, WCHAR *lpszFormat, ...)
 {
@@ -157,6 +173,18 @@ inline void DebugInit ()
 	GetLocalTime (&st);
 	__DebugOut (0xffffffff, L"Debug log started @ %02d:%02d:%02d %02d/%02d/%d\n",
 		st.wHour, st.wMinute, st.wSecond, st.wMonth, st.wDay, st.wYear);
+
+   // determine the initial value.
+   GetLogLevel(dwDebugLevel);
+
+   // subscribe to registry notifications
+   HRESULT hr = RegistryNotifyCallback(HKEY_LOCAL_MACHINE, 
+      REG_DEBUG_KEY,
+      REG_VALUE_KEY,
+      RegistryNotifyCallbackFunc,
+      0L,
+      NULL,
+      &hRegNotify);
 }
 
 inline void DebugDeInit()
@@ -172,6 +200,10 @@ inline void DebugDeInit()
 	CloseHandle (hDebugOutput);
 	hDebugOutput = INVALID_HANDLE_VALUE;
 	cDebugOutput = 0;
+
+   // unsubscribe the registry notifications.
+   RegistryCloseNotification(hRegNotify);
+
 	DeleteCriticalSection (&csDebugOutput);
 }
 
