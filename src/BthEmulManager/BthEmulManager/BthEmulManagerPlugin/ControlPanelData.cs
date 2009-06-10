@@ -20,14 +20,16 @@
 namespace BthEmul.Data
 {
     using System;
-    using System.Collections;    
+    using System.Collections;
+    using System.Timers;
+    using System.Runtime.InteropServices;
 
     using Microsoft.RemoteToolSdk.PluginComponents;
     using BthEmul.View;
 
     // A delegate type for hooking up logging change notifications.
     public delegate void LoggingChangedEventHandler(object sender, EventArgs e);
-
+    
     /// <summary>
     /// The device side app expects a command with a value of 1 sent to it,
     /// where it will then fill the return packet with some dummy data.
@@ -46,44 +48,55 @@ namespace BthEmul.Data
         private string remoteVersion;
         private DEVICE_INFO deviceInfo;
         private string manufacturer;
+        private int devId = BthRuntime.INVALID_DEVICE_ID;
+        private System.Timers.Timer connectionMonitorTimer = null;
         
         /// <summary>
         /// Constructor: 
         /// </summary>
         /// <param name="host">Plugin owning this data</param>
         /// <param name="guid">Guid of the node owning this data</param>
-        public ControlPanelData( PluginComponent host, string guid )
-            : base( host, guid )
+        public ControlPanelData(PluginComponent host, string guid)
+            : base(host, guid)
         {
-            this.InitDataAtViewTime = false;
-            this.HardwareState = HARDWARE_STATE.DETACHED;
-            this.settings = new Settings();
-            this.commLog = new ArrayList();
-            this.deviceInfo = new DEVICE_INFO();
+            InitDataAtViewTime = false;
+            HardwareState = HARDWARE_STATE.DETACHED;
+            settings = new Settings();
+            commLog = new ArrayList();
+            deviceInfo = new DEVICE_INFO();
 
+            // query remote device info.
+            DeviceDatbaseItem item = Host.DeviceDatabase.FindByGuid(Host.DeviceConnection.Guid);
+            RemotePlatform = item.Platform;
+            RemoteDescription = item.Description;
+            RemoteVersion = string.Format("{0}.{1:00}", item.OsMajor, item.OsMinor);
+            RemoteCPU = item.CPU;
+            
+            // restore settings from file.
             settingsPath = host.SettingsPath;
-            this.settings.Deserialize(settingsPath);            
+            settings.Deserialize(settingsPath);            
         }
 
         ~ControlPanelData()
         {
-            this.settings.Serialize(this.settingsPath);        
+            CloseDevice();
+            settings.Serialize(settingsPath);            
         }
 
         public HARDWARE_STATE HardwareState
         {
-            get { return this.hardwareState;  }
-            set { this.hardwareState = value;  }
+            get { return hardwareState;  }
+            set { hardwareState = value;  }
         }
 
         public bool DeviceLogging
         {
-            get { return this.settings.DeviceLogging; }
+            get { return settings.DeviceLogging; }
             set
             {
-                if (value != this.settings.DeviceLogging)
+                if (value != settings.DeviceLogging)
                 {
-                    this.settings.DeviceLogging = value;
+                    settings.DeviceLogging = value;
 
                     if (DeviceLoggingChanged != null)
                     {
@@ -95,12 +108,12 @@ namespace BthEmul.Data
 
         public bool DesktopLogging
         {
-            get { return this.settings.DesktopLogging; }
+            get { return settings.DesktopLogging; }
             set
             {
-                if (value != this.settings.DesktopLogging)
+                if (value != settings.DesktopLogging)
                 {
-                    this.settings.DesktopLogging = value;
+                    settings.DesktopLogging = value;
 
                     if (DesktopLoggingChanged != null)
                     {
@@ -112,12 +125,12 @@ namespace BthEmul.Data
 
         public bool CommLogging
         {
-            get { return this.settings.CommLogging; }
+            get { return settings.CommLogging; }
             set
             {
-                if (value != this.settings.CommLogging)
+                if (value != settings.CommLogging)
                 {
-                    this.settings.CommLogging = value;
+                    settings.CommLogging = value;
 
                     if (CommLoggingChanged != null)
                     {
@@ -129,66 +142,131 @@ namespace BthEmul.Data
 
         public event LoggingChangedEventHandler DeviceLoggingChanged;
         public event LoggingChangedEventHandler DesktopLoggingChanged;
-        public event LoggingChangedEventHandler CommLoggingChanged;
+        public event LoggingChangedEventHandler CommLoggingChanged;        
 
         public ArrayList CommLog
         {
-            get { return this.commLog; }
-            set { this.commLog = value; }
+            get { return commLog; }
+            set { commLog = value; }
         }
 
         public int HardwareErrorCode
         {
-            get { return this.hardwareErrorCode;  }
-            set { this.hardwareErrorCode = value;  }
+            get { return hardwareErrorCode;  }
+            set { hardwareErrorCode = value;  }
         }
 
         public string HardwareErrorMessage
         {
-            get { return this.hardwareErrorMessage; }
-            set { this.hardwareErrorMessage = value; }
+            get { return hardwareErrorMessage; }
+            set { hardwareErrorMessage = value; }
         }
 
         public string RemotePlatform
         {
-            get { return this.remotePlatform; }
-            set { this.remotePlatform = value; }
+            get { return remotePlatform; }
+            set { remotePlatform = value; }
         }
 
         public string RemoteDescription
         {
-            get { return this.remoteDescription; }
-            set { this.remoteDescription = value; }
+            get { return remoteDescription; }
+            set { remoteDescription = value; }
         }
 
         public string RemoteCPU
         {
-            get { return this.remoteCPU; }
-            set { this.remoteCPU = value; }
+            get { return remoteCPU; }
+            set { remoteCPU = value; }
         }
 
         public string RemoteVersion
         {
-            get { return this.remoteVersion; }
-            set { this.remoteVersion = value; }
+            get { return remoteVersion; }
+            set { remoteVersion = value; }
         }
 
         public DEVICE_INFO DeviceInfo
         {
-            get { return this.deviceInfo; }
-            set { this.deviceInfo = value;  }
+            get { return deviceInfo; }
+            set { deviceInfo = value;  }
         }
 
         public string Manufacturer
         {
-            get { return this.manufacturer;  }
-            set { this.manufacturer = value;  }
+            get { return manufacturer;  }
+            set { manufacturer = value;  }
         }
 
         public void ClearCommLog()
         {
-            this.CommLog.Clear();
+            CommLog.Clear();
             RenderViews(null);
+        }
+
+        public int OpenDevice()
+        {
+            BthRuntime.SetLogFileName("BthEmulManager.txt");
+
+            int level = DesktopLogging ? 255 : 0;
+            BthRuntime.SetLogLevel(level);
+
+            devId = BthRuntime.OpenDevice();
+            if (BthRuntime.INVALID_DEVICE_ID == devId)
+            {
+                HardwareState = HARDWARE_STATE.UNAVAILABLE;
+
+                int lastError = Marshal.GetLastWin32Error();
+                HardwareErrorCode = lastError;
+                HardwareErrorMessage = new System.ComponentModel.Win32Exception(lastError).Message;
+                RenderViews(null);
+            }
+            else
+            {
+                HardwareState = HARDWARE_STATE.ATTACHED;
+
+                // get device info.
+                DEVICE_INFO deviceInfo = new DEVICE_INFO();
+                if (1 == BthRuntime.GetDeviceInfo(devId, ref deviceInfo))
+                {
+                    DeviceInfo = deviceInfo;
+                    Manufacturer = BthRuntime.GetManufacturerName(deviceInfo.manufacturer);
+                }
+
+                // start connection monitor timer.
+                connectionMonitorTimer = new System.Timers.Timer();
+                connectionMonitorTimer.Elapsed += new ElapsedEventHandler(ConnectionMonitorTimerEvent);
+                connectionMonitorTimer.Interval = 3000;
+                connectionMonitorTimer.Start();
+            }
+
+            return devId;
+        }
+
+        public void CloseDevice()
+        {
+            if (BthRuntime.INVALID_DEVICE_ID != devId)
+            {
+                BthRuntime.CloseDevice(devId);
+                devId = BthRuntime.INVALID_DEVICE_ID;
+
+                HardwareState = HARDWARE_STATE.DETACHED;
+                RenderViews(null);
+
+                if (connectionMonitorTimer != null)
+                {
+                    connectionMonitorTimer.Stop();
+                    connectionMonitorTimer = null;
+                }
+            }
+        }
+
+        private void ConnectionMonitorTimerEvent(object source, ElapsedEventArgs e)
+        {
+            if (CommandTransport.ConnectionState == CommandTransport.ConnectState.Disconnected)
+            {
+                CloseDevice();
+            }
         }
 
         /// <summary>
@@ -198,7 +276,7 @@ namespace BthEmul.Data
         {
             // By setting Initialized to true, the view panel(s) hooked up
             // to this data object will refresh.
-            this.Initialized = true;
+            Initialized = true;
         }
 
         /// <summary>
@@ -213,11 +291,11 @@ namespace BthEmul.Data
             
             // bluetooth address.
             string category = "Hardware:";
-            dataAcceptor.AddItem(category, this.HardwareState.ToString(), "");
-            if (this.HardwareState == HARDWARE_STATE.UNAVAILABLE)
+            dataAcceptor.AddItem(category, HardwareState.ToString(), "");
+            if (HardwareState == HARDWARE_STATE.UNAVAILABLE)
             {
-                dataAcceptor.AddItem(category, "ErrorCode", this.HardwareErrorCode.ToString());
-                dataAcceptor.AddItem(category, "ErrorMessage", this.HardwareErrorMessage);
+                dataAcceptor.AddItem(category, "ErrorCode", HardwareErrorCode.ToString());
+                dataAcceptor.AddItem(category, "ErrorMessage", HardwareErrorMessage);
             }
             dataAcceptor.AddItem("Address:", string.Format("{0:X2}:{1:X2}:{2:X2}:{3:X2}:{4:X2}:{5:X2}", DeviceInfo.btAddr.btAddr5, DeviceInfo.btAddr.btAddr4, DeviceInfo.btAddr.btAddr3, DeviceInfo.btAddr.btAddr2, DeviceInfo.btAddr.btAddr1, DeviceInfo.btAddr.btAddr0), "");
             dataAcceptor.AddItem("HCI Version:", string.Format("{0}.{1:00}", DeviceInfo.hciVersion, DeviceInfo.hciRevision), ""); 
@@ -234,9 +312,9 @@ namespace BthEmul.Data
             dataAcceptor.AddItem("", "", "");
 
             category = "Log:";
-            for (int i = 0; i < this.commLog.Count; i++)
+            for (int i = 0; i < commLog.Count; ++i)
             {
-                dataAcceptor.AddItem(category, i.ToString(), this.commLog[i].ToString());
+                dataAcceptor.AddItem(category, i.ToString(), commLog[i].ToString());
             }
         }
     }

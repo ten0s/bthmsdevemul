@@ -31,10 +31,10 @@
 #else
    #define WRITE_QUEUE_NAME            _T("{1570692E-0FB1-43e8-878A-A6EC8983DECF}")
    #define READ_QUEUE_NAME             _T("{A0E16217-E207-4ded-ABE8-0BC0ABC4E565}")      
-   #define MSG_QUEUE_READ_TIMEOUT      600000
+   #define MSG_QUEUE_READ_TIMEOUT      INFINITE
 #endif
 
-#define MSG_QUEUE_WRITE_TIMEOUT     1000
+#define MSG_QUEUE_WRITE_TIMEOUT     INFINITE
 #define MSG_BUFFER_SIZE             Packet::BUFFER_SIZE
 
 static HANDLE g_hReadQueue = NULL;

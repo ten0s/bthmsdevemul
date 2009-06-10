@@ -85,6 +85,8 @@ namespace BthEmul
 
     class BthRuntime
     {
+        public static int INVALID_DEVICE_ID = -1;
+
         [DllImport("fbtrt.dll", SetLastError = true)]
         public static extern int OpenDevice();
 

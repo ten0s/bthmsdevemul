@@ -339,11 +339,6 @@ int HCI_OpenConnection()
 	   return nRet;
    }
 
-   if ( !SetupComm( g_hFile, 20000, 20000 ) ) {
-      // Ignore this failure
-      IFDBG( DebugOut( DEBUG_OUTPUT, L"SetupComm ret: 0x%08x\n", GetLastError() ) );
-   } 
-
    // purge any information in the buffer
    if ( !PurgeComm( g_hFile, PURGE_TXABORT | PURGE_RXABORT | PURGE_TXCLEAR | PURGE_RXCLEAR ) ) {
       nRet = FALSE;
@@ -352,6 +347,14 @@ int HCI_OpenConnection()
       g_hFile = INVALID_HANDLE_VALUE;
       IFDBG( DebugOut( DEBUG_OUTPUT, L"-HCI_OpenConnection ret: %d\n", nRet ) );
       return nRet;
+   }
+
+   /* 2009-04-13 Dm.Klionsky 
+   Commented out the following calls. The default COM port values should be all rights.
+
+   if ( !SetupComm( g_hFile, 20000, 20000 ) ) {
+      // Ignore this failure
+      IFDBG( DebugOut( DEBUG_OUTPUT, L"SetupComm ret: 0x%08x\n", GetLastError() ) );
    }
 
    COMMTIMEOUTS commTimeOuts = {0};
@@ -387,7 +390,7 @@ int HCI_OpenConnection()
    dcb.fNull = FALSE;
    dcb.fAbortOnError = TRUE;
    //    dcb.wReserved = 0;
-   dcb.ByteSize =8;
+   dcb.ByteSize = 8;
    dcb.Parity = NOPARITY;
    dcb.StopBits = ONESTOPBIT;
    dcb.XonChar = 0x11;
@@ -403,6 +406,7 @@ int HCI_OpenConnection()
       IFDBG( DebugOut( DEBUG_OUTPUT, L"-HCI_OpenConnection ret: %d\n", nRet ) );
       return nRet;
    }
+   */
 
    g_hWriteEvent = CreateEvent( NULL, FALSE, FALSE, NULL );
    g_hReadEvent = CreateEvent( NULL, FALSE, FALSE, NULL );
@@ -490,7 +494,7 @@ static BOOL ReadCommPort( unsigned char* pBuffer, DWORD dwLen )
 */
 int HCI_WritePacket( HCI_TYPE eType, BD_BUFFER* pBuff ) 
 {
-	IFDBG( DebugOut( DEBUG_OUTPUT, L"+HCI_WritePacket HCI_TYPE: 0x%02x len %d\n", eType, BufferTotal(pBuff) ) );
+   IFDBG( DebugOut( DEBUG_OUTPUT, L"+HCI_WritePacket HCI_TYPE: 0x%02x len %d\n", eType, BufferTotal(pBuff) ) );
    IFDBG( DumpBuff( DEBUG_OUTPUT, pBuff->pBuffer + pBuff->cStart, BufferTotal( pBuff ) ) );
 
    ASSERT( !( pBuff->cStart & 0x3 ) );
@@ -525,7 +529,7 @@ int HCI_WritePacket( HCI_TYPE eType, BD_BUFFER* pBuff )
 */
 int HCI_ReadPacket( HCI_TYPE* peType, BD_BUFFER* pBuff ) 
 {
-	IFDBG( DebugOut( DEBUG_OUTPUT, L"+HCI_ReadPacket\n" ) );
+   IFDBG( DebugOut( DEBUG_OUTPUT, L"+HCI_ReadPacket\n" ) );
 
    if ( g_hFile == INVALID_HANDLE_VALUE ) {
       IFDBG( DebugOut( DEBUG_OUTPUT, L"-HCI_ReadPacket - not active\n" ) );

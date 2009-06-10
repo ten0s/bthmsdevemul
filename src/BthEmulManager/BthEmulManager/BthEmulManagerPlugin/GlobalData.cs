@@ -36,5 +36,10 @@ namespace BthEmul
                 return version;
             }
         }
+
+        public static string OK = "OK";
+        public static string FAIL = "Fail";
+        public static string LOG_FORMAT = "{0}: {1} {2}";
+        public static string EVENT_PACKET = "EVENT_PACKET";        
     }
 }

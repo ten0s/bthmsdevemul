@@ -26,8 +26,6 @@
 
 DECLARE_DEBUG_VARS();
 
-LPCTSTR szDebugKey = _T("Software\\Microsoft\\Bluetooth\\Debug");
-
 #ifdef DEBUG
 #define TRACE
 #endif
@@ -68,7 +66,7 @@ BOOL SetLogLevel( DWORD dwLevel )
    BOOL bRet = FALSE;
 
    HKEY hk;
-   DWORD dwStatus = RegOpenKeyEx( HKEY_LOCAL_MACHINE, szDebugKey, 0, KEY_WRITE, &hk );
+   DWORD dwStatus = RegOpenKeyEx( HKEY_LOCAL_MACHINE, REG_DEBUG_KEY, 0, KEY_WRITE, &hk );
    if ( ERROR_SUCCESS == dwStatus ) {
       DWORD dwType = REG_DWORD;
       DWORD dwSize = sizeof( dwLevel );
@@ -76,13 +74,13 @@ BOOL SetLogLevel( DWORD dwLevel )
       if ( ERROR_SUCCESS == dwStatus ) {
          bRet = TRUE;
       } else {
-         TRACE3( "RegSetValueEx %s %s ret: 0x%08x", szDebugKey, _T("Mask"), dwStatus );
-         DebugOut( DEBUG_OUTPUT, L"RegSetValueEx %s %s ret: 0x%08x\n", szDebugKey, _T("Mask"), dwStatus );
+         TRACE3( "RegSetValueEx %s %s ret: 0x%08x", REG_DEBUG_KEY, REG_VALUE_KEY, dwStatus );
+         DebugOut( DEBUG_OUTPUT, L"RegSetValueEx %s %s ret: 0x%08x\n", REG_DEBUG_KEY, REG_VALUE_KEY, dwStatus );
       }
       RegCloseKey( hk );
    } else {
-      TRACE2( "RegOpenKeyEx %s ret: 0x%08x", szDebugKey, dwStatus );
-      DebugOut( DEBUG_OUTPUT, L"RegOpenKeyEx %s ret: 0x%08x\n", szDebugKey, dwStatus );
+      TRACE2( "RegOpenKeyEx %s ret: 0x%08x", REG_DEBUG_KEY, dwStatus );
+      DebugOut( DEBUG_OUTPUT, L"RegOpenKeyEx %s ret: 0x%08x\n", REG_DEBUG_KEY, dwStatus );
    }	
 
    //IFDBG( DebugOut( DEBUG_OUTPUT, L"-SetLogLevel ret: %d\n", bRet ) );
@@ -102,35 +100,42 @@ BOOL GetLogLevel( DWORD& dwLevel )
    dwLevel = 0;
 
    HKEY hk;
-   DWORD dwStatus = RegOpenKeyEx( HKEY_LOCAL_MACHINE, szDebugKey, 0, KEY_READ, &hk );
+   DWORD dwStatus = RegOpenKeyEx( HKEY_LOCAL_MACHINE, REG_DEBUG_KEY, 0, KEY_READ, &hk );
    if ( ERROR_SUCCESS == dwStatus ) {
       DWORD dwType = 0;
       DWORD dwData = 0;
       DWORD dwSize = sizeof( dwData );
-      dwStatus = RegQueryValueEx( hk, _T("Mask"), NULL, &dwType, (LPBYTE)&dwData, &dwSize );
+      dwStatus = RegQueryValueEx( hk, REG_VALUE_KEY, NULL, &dwType, (LPBYTE)&dwData, &dwSize );
       if ( ( ERROR_SUCCESS == dwStatus ) &&
          ( dwType == REG_DWORD ) && ( dwSize == sizeof( dwData ) ) ) {
             dwLevel = dwData;
             bRet = TRUE;
       } else {
-         TRACE3( "RegQueryValueEx %s %s ret: 0x%08x", szDebugKey, _T("Mask"), dwStatus );
-         DebugOut( DEBUG_OUTPUT, L"RegQueryValueEx %s %s ret: 0x%08x\n", szDebugKey, _T("Mask"), dwStatus );
+         TRACE3( "RegQueryValueEx %s %s ret: 0x%08x", REG_DEBUG_KEY, REG_VALUE_KEY, dwStatus );
+         DebugOut( DEBUG_OUTPUT, L"RegQueryValueEx %s %s ret: 0x%08x\n", REG_DEBUG_KEY, REG_VALUE_KEY, dwStatus );
       }
       RegCloseKey( hk );
    } else {
-      TRACE2( "RegOpenKeyEx %s ret: 0x%08x", szDebugKey, dwStatus );
-      DebugOut( DEBUG_OUTPUT, L"RegOpenKeyEx %s ret: 0x%08x\n", szDebugKey, dwStatus );
+      TRACE2( "RegOpenKeyEx %s ret: 0x%08x", REG_DEBUG_KEY, dwStatus );
+      DebugOut( DEBUG_OUTPUT, L"RegOpenKeyEx %s ret: 0x%08x\n", REG_DEBUG_KEY, dwStatus );
    }
 
    //DebugOut( DEBUG_OUTPUT, L"-GetLogLevel dwLevel: 0x%08x ret: %d\n", dwLevel, bRet );
    return bRet;
 }
 
+void RegistryNotifyCallbackFunc( HREGNOTIFY hNotify, DWORD dwUserData, const PBYTE pData, const UINT cbData )
+{
+   DebugOut( DEBUG_OUTPUT, L"+RegistryNotifyCallbackFunc\n" );
+   dwDebugLevel = (*(DWORD*)pData);
+   DebugOut( DEBUG_OUTPUT, L"-RegistryNotifyCallbackFunc dwDebugLevel: 0x%08x\n", dwDebugLevel );
+}
+
 #ifdef IFDBG
 #undef IFDBG
 #define IFDBG( out )   \
-{  DWORD dwLevel = 0;   \
-   if ( GetLogLevel( dwLevel ) && 0xFFFFFFFF == dwLevel ) { out; } \
+{                                               \
+   if ( 0xFFFFFFFF == dwDebugLevel ) { out; }   \
 }
 #endif
 
