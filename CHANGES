@@ -1,3 +1,10 @@
+ver 0.9.5:
+* Swiched to Windows Mobile 5.0 Pocket PC SDK (ARMV4I)
+* Fixed plugin reconnection problem.
+* Updated project documentation.
+* Added README file russian version.
+* Significantly improved device side performance.
+
 ver 0.9.4:
 * Changed GetManufacturerName method's getting results. Looks like problems with Vista ASLR & DEP.
 
