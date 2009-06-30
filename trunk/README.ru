@@ -154,7 +154,7 @@ FreeBT USB драйвер быть протестирован со следую�
 ===================
 
 Bluetooth для Microsoft Device Emulator
-Copyright (C) 2008-2009 Dmitry Klionsky <dm.klionsky@gmail.com>
+Copyright (C) 2008-2009 Dmitry Klionsky aka ten0s <dm.klionsky@gmail.com>
 
 FreeBT
 Copyright (C) 2004 Antony C. Roberts <http://www.freebt.net/>
