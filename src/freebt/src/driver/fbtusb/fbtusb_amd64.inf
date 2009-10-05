@@ -10,6 +10,13 @@
 ;
 ; http://www.freebt.net
 
+;
+; The original and principal author is Antony C. Roberts http://www.freebt.net.  
+; Other authors are noted in the change history that follows (in reverse chronological order):
+;
+; 2008-10-05 Dmitry Klionsky Added FreeBT support for amd64 platform.
+;
+
 [Version]
 Signature="$CHICAGO$"
 Class=USB
