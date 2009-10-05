@@ -1,1 +1,1 @@
-call build_x86.cmd fre wlh
+call build_xXX.cmd x86 fre wlh

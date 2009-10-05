@@ -1,1 +1,1 @@
-call build_x86.cmd chk wxp
+call build_xXX.cmd x86 chk wxp
