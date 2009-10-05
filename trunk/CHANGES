@@ -4,6 +4,7 @@ ver 0.9.5:
 * Updated project documentation.
 * Added README file russian version.
 * Significantly improved device side performance.
+* Added FreeBT support for amd64 platform.
 
 ver 0.9.4:
 * Changed GetManufacturerName method's getting results. Looks like problems with Vista ASLR & DEP.
