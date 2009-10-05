@@ -1,1 +1,1 @@
-call build_x86.cmd fre wxp
+call build_xXX.cmd x86 fre wxp
