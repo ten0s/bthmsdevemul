@@ -1,6 +1,6 @@
 # Bluetooth for Microsoft Device Emulator
 
-**Bluetooth for Microsoft Device Emulator* enables Bluetooth communication from and to the emulator.
+**Bluetooth for Microsoft Device Emulator** enables Bluetooth communication from and to the emulator.
 
 Please refer to [REAME](/README.en) to get started. Русская версия [тут](/README.ru).
 
