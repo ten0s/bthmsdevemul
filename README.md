@@ -2,7 +2,7 @@
 
 **Bluetooth for Microsoft Device Emulator** enables Bluetooth communication from and to the emulator.
 
-Please refer to [REAME](/README.en) to get started. Русская версия [тут](/README.ru).
+Please refer to [README](/README.en) to get started. Русская версия [тут](/README.ru).
 
 I re-licensed my code in the freebt folder under the FreeBT license. You can find it at https://github.com/ten0s/freebt.
 
